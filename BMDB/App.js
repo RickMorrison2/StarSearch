@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image} from 'react-native';
 // const imdb = require('imdb-api');
-const console = require('console');
+// const console = require('console');
 
 export default class App extends React.Component {
   constructor(props) {
@@ -12,14 +12,13 @@ export default class App extends React.Component {
       resultsOpen: false,
       artist1ID: '',
       artist2ID: '',
-      artist1Name: '',
-      artist2Name: '',
       movies1: '',
       movies2: '',
       shows1: '',
       shows2: '',
       sharedMovies: 'none',
-      sharedShows: 'none'
+      sharedShows: 'none',
+      previousSearches: ''
     }
     this.getMoviesID1 = this.getMoviesID1.bind(this)
     this.getMoviesID2 = this.getMoviesID2.bind(this)
@@ -76,8 +75,13 @@ export default class App extends React.Component {
       this.setState({
         artist2ID: data.results[0].id
       })
-      this.getMoviesID2(data.results[0].id)
-      this.getShowsID2(data.results[0].id)
+      return data.results[0].id})
+    .then(id => {
+      this.getMoviesID2(id)
+      return id;
+    })
+    .then(id => {
+      this.getShowsID2(id)
     })
   }
 
@@ -96,8 +100,8 @@ export default class App extends React.Component {
         movies2: movies,
         resultsOpen: true
       })
-      this.compareMovies();
     })
+    .then(this.compareMovies())
   }
     
   getShowsID1(id) {
@@ -131,8 +135,8 @@ export default class App extends React.Component {
         shows2: shows,
         resultsOpen: true
       })
-      this.compareShows()
     })
+    .then(this.compareShows())
   }
 
   compareMovies() {
@@ -144,9 +148,15 @@ export default class App extends React.Component {
         sharedMovies.push(movie);
       }
     }
-    this.setState({
-      sharedMovies: sharedMovies.join(', ')
-    })
+    if (sharedMovies.length === 0) {
+      this.setState({
+        sharedMovies: 'none'
+      })
+    } else {
+      this.setState({
+        sharedMovies: sharedMovies.join(', ')
+      })
+    }
   }
 
   compareShows() {
@@ -158,72 +168,161 @@ export default class App extends React.Component {
         sharedShows.push(show);
       }
     }
-    this.setState({
-      sharedShows: sharedShows.join(', ')
-    })
+    if (sharedShows.length === 0) {
+      this.setState({
+        sharedShows: 'none'
+      })
+    } else {
+      this.setState({
+        sharedShows: sharedShows.join(', ')
+      })
+    }
+  }
+
+  postSearch() {
+    const body = {
+      text1: this.state.text1,
+      text2: this.state.text2,
+      sharedMovies: this.state.sharedMovies,
+      sharedShows: this.state.sharedShows
+    }
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    fetch('mongodb://localhost', options)
+    .then(res => res.json())
+    .catch((err) => Alert.alert(JSON.stringify(err)))
+  }
+
+  getSearches() {
+    fetch('mongodb://localhost')
+    .then(res => res.json())
+    .catch((err) => Alert.alert(JSON.stringify(err)))
+
   }
 
   render() {
     if (this.state.resultsOpen === false) {
       return (
         <View style={styles.container}>
-        {/* <Image 
+        <Image 
           style={{
-            flex: 1
+            flex: 1,
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
           }}
-          source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Starsinthesky.jpg/2880px-Starsinthesky.jpg'}}> */}
-        <Text style={{fontSize: 18}}>StarSearch</Text>
-        <TextInput
-          style={{
-            height: 50, 
-            width: 200, 
-            borderColor: 'black', 
+          source={require('./assets/Starsinthesky.jpg')} />
+          <Text style={{
+            fontSize: 30, 
+            color: 'white',
+            padding: 5,
+            paddingLeft: 15,
+            paddingRight: 15,
+            margin: 5,
+            borderColor: 'gray',
             borderWidth: 1,
-            padding: 10,
-            margin: 5
-          }}
-          placeholder={this.state.artist1Name}
-          onChangeText={(text1) => this.setState({text1})}
-          />
-        <TextInput
-          style={{
-            height: 50, 
-            width: 200, 
-            borderColor: 'black', 
-            borderWidth: 1,
-            padding: 10,
-            margin: 5
-          }}
-          placeholder={this.state.artist2Name}
-          onChangeText={(text2) => this.setState({text2})}
-          />
-        <Button
-          onPress={() => {
-            this.searchDatabaseByName1(this.state.text1)
-            this.searchDatabaseByName2(this.state.text2)
-          }}
-          title="Search"
-          />
-      {/* </Image> */}
-      </View>
+            borderRadius: 5,
+            backgroundColor: 'rgba(0,0,0,0.5)'
+            }}>Star Search</Text>
+          <TextInput
+            style={{
+              height: 50, 
+              width: 200, 
+              borderColor: 'gray', 
+              borderWidth: 1,
+              borderRadius: 5,
+              padding: 10,
+              margin: 5,
+              backgroundColor: 'rgba(255, 255, 255, 0.7)'
+            }}
+            placeholder="Actor 1"
+            onChangeText={(text1) => this.setState({text1})}
+            />
+          <TextInput
+            style={{
+              height: 50, 
+              width: 200, 
+              borderColor: 'gray', 
+              borderWidth: 1,
+              borderRadius: 5,
+              padding: 10,
+              margin: 5,
+              backgroundColor: 'rgba(255, 255, 255, 0.7)'
+            }}
+            placeholder="Actor 2"
+            onChangeText={(text2) => this.setState({text2})}
+            />
+          <Button
+            onPress={() => {
+              this.searchDatabaseByName1(this.state.text1)
+              this.searchDatabaseByName2(this.state.text2)
+            }}
+            title="Search"
+            />
+        </View>
     );
   } else {
     return (
       <View style={styles.container}>
-        <Text>Here are your results:  
-            <Text>{`
-              Movies:
-              ${this.state.sharedMovies}
-              TV Shows:
-              ${this.state.sharedShows}
+        <Image 
+          style={{
+            flex: 1,
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+          }}
+          source={require('./assets/Starsinthesky.jpg')} />
+        <Text style={{
+              fontSize: 24,
+              color: 'white',
+              // flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)'
+            }}>{`${this.state.text1} and ${this.state.text2} have both been in: `}  
+            <Text style={{
+              fontSize: 24,
+              color: 'white',
+              // flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              // backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            }}>{`
+              Movies: ${this.state.sharedMovies}
+              TV Shows: ${this.state.sharedShows}
             `}
             </Text>
-          </Text>
+        </Text>
         <Button 
           onPress={() => {
             this.setState({resultsOpen: false})
           }}
           title="Go Back"
+        />
+        <Button
+          onPress={() => {
+            this.postSearch()
+          }}
+          title="Save Search"
+        />
+        <Button
+          onPress={() => {
+            this.getSearches()
+          }}
+          title="Previous Searches"
         />
       </View>
     )
@@ -235,7 +334,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'gray',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center'
   },
 });
