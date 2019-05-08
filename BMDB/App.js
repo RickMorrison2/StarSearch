@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, Button, Alert, Image} from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
+const console = require('console');
 // const imdb = require('imdb-api');
 // const console = require('console');
 
@@ -16,9 +17,10 @@ export default class App extends React.Component {
       movies2: '',
       shows1: '',
       shows2: '',
-      sharedMovies: 'none',
-      sharedShows: 'none',
-      previousSearches: ''
+      sharedMovies: 'Loading...',
+      sharedShows: 'Loading...',
+      previousSearches: '',
+      prevSearchesOpen: false,
     }
     this.getMoviesID1 = this.getMoviesID1.bind(this)
     this.getMoviesID2 = this.getMoviesID2.bind(this)
@@ -44,9 +46,9 @@ export default class App extends React.Component {
       this.getMoviesID1(id)
       return id;
     })
-    .then(id => {
-      this.getShowsID1(id)
-    })
+    // .then(id => {
+    //   this.getShowsID1(id)
+    // })
   }
 
     
@@ -62,8 +64,9 @@ export default class App extends React.Component {
       }
       this.setState({
         movies1: movies,
-        resultsOpen: true
-      })
+        // resultsOpen: true
+      }, () => this.getShowsID1(id))
+      // this.getShowsID1(id)
     })
   }
 
@@ -80,9 +83,9 @@ export default class App extends React.Component {
       this.getMoviesID2(id)
       return id;
     })
-    .then(id => {
-      this.getShowsID2(id)
-    })
+    // .then(id => {
+    //   this.getShowsID2(id)
+    // })
   }
 
     
@@ -98,10 +101,10 @@ export default class App extends React.Component {
       }
       this.setState({
         movies2: movies,
-        resultsOpen: true
-      })
+        // resultsOpen: true
+      }, () => this.getShowsID2(id))
     })
-    .then(this.compareMovies())
+    // .then(this.compareMovies())
   }
     
   getShowsID1(id) {
@@ -116,7 +119,7 @@ export default class App extends React.Component {
       }
       this.setState({
         shows1: shows,
-        resultsOpen: true
+        // resultsOpen: true
       })
     })
   }
@@ -133,10 +136,9 @@ export default class App extends React.Component {
       }
       this.setState({
         shows2: shows,
-        resultsOpen: true
-      })
+        // resultsOpen: true
+      }, () => this.compareMovies())
     })
-    .then(this.compareShows())
   }
 
   compareMovies() {
@@ -151,11 +153,11 @@ export default class App extends React.Component {
     if (sharedMovies.length === 0) {
       this.setState({
         sharedMovies: 'none'
-      })
+      }, () => this.compareShows())
     } else {
       this.setState({
         sharedMovies: sharedMovies.join(', ')
-      })
+      }, () => this.compareShows())
     }
   }
 
@@ -170,11 +172,13 @@ export default class App extends React.Component {
     }
     if (sharedShows.length === 0) {
       this.setState({
-        sharedShows: 'none'
+        sharedShows: 'none',
+        resultsOpen: true
       })
     } else {
       this.setState({
-        sharedShows: sharedShows.join(', ')
+        sharedShows: sharedShows.join(', '),
+        resultsOpen: true
       })
     }
   }
@@ -193,16 +197,32 @@ export default class App extends React.Component {
         'Content-Type': 'application/json'
       }
     }
-    fetch('mongodb://localhost', options)
-    .then(res => res.json())
-    .catch((err) => Alert.alert(JSON.stringify(err)))
+    fetch('http://10.6.66.46:3001/searches', options)
+    // .then(res => res.json())
+    .then(Alert.alert('', 'Search saved!'))
+    // .catch((err) => Alert.alert('Error', JSON.stringify(err)))
   }
 
   getSearches() {
-    fetch('mongodb://localhost')
+    fetch('http://10.6.66.46:3001/searches')
     .then(res => res.json())
-    .catch((err) => Alert.alert(JSON.stringify(err)))
+    .then(data => {
+      this.setState({
+        previousSearches: data
+      })
+    })
+    .then(this.setState({
+      prevSearchesOpen: true
+    }))
+    // .catch((err) => Alert.alert('Error', JSON.stringify(err)))
+  }
 
+  handleSearch(state) {
+    this.searchDatabaseByName1(state.text1)
+    this.searchDatabaseByName2(state.text2)
+    this.setState({
+      resultsOpen: true
+    })
   }
 
   render() {
@@ -242,7 +262,8 @@ export default class App extends React.Component {
               backgroundColor: 'rgba(255, 255, 255, 0.7)'
             }}
             placeholder="Actor 1"
-            onChangeText={(text1) => this.setState({text1})}
+            value={this.state.text1}
+            onChangeText={async (text1) => await this.setState({text1})}
             />
           <TextInput
             style={{
@@ -256,18 +277,16 @@ export default class App extends React.Component {
               backgroundColor: 'rgba(255, 255, 255, 0.7)'
             }}
             placeholder="Actor 2"
-            onChangeText={(text2) => this.setState({text2})}
+            value={this.state.text2}
+            onChangeText={async (text2) => await this.setState({text2})}
             />
           <Button
-            onPress={() => {
-              this.searchDatabaseByName1(this.state.text1)
-              this.searchDatabaseByName2(this.state.text2)
-            }}
+            onPress={() => this.handleSearch(this.state)}
             title="Search"
             />
         </View>
     );
-  } else {
+  } else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false) {
     return (
       <View style={styles.container}>
         <Image 
@@ -280,50 +299,102 @@ export default class App extends React.Component {
           }}
           source={require('./assets/Starsinthesky.jpg')} />
         <Text style={{
-              fontSize: 24,
-              color: 'white',
-              // flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)'
-            }}>{`${this.state.text1} and ${this.state.text2} have both been in: `}  
-            <Text style={{
-              fontSize: 24,
-              color: 'white',
-              // flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignContent: 'center',
-              alignItems: 'center',
-              // backgroundColor: 'rgba(0, 0, 0, 0.2)'
-            }}>{`
+          fontSize: 24,
+          color: 'white',
+          padding: 5,
+          // flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          shadowColor: 'black'
+        }}>{`${this.state.text1} and ${this.state.text2} have both been in: `}  
+              <Text style={{
+                fontSize: 24,
+                color: 'white',
+                padding: 5,
+                // flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignContent: 'center',
+                alignItems: 'center',
+                // backgroundColor: 'rgba(0, 0, 0, 0.2)'
+              }}>{`
               Movies: ${this.state.sharedMovies}
               TV Shows: ${this.state.sharedShows}
-            `}
-            </Text>
+              `}
+              </Text>
         </Text>
+        <View
+        style={{
+          padding: 5,
+        }}
+        >
+          <Button 
+            onPress={() => {
+              this.setState({resultsOpen: false})
+            }}
+            title="Go Back"
+            />  
+        </View>
+        <View style={{
+          padding: 5,
+        }}>
+          <Button
+            onPress={() => {
+              this.postSearch()
+            }}
+            title="Save Search"
+            />
+        </View>
+        <View
+        style={{
+          padding: 5,
+        }}>
+          <Button
+            onPress={() => {
+              this.getSearches()
+            }}
+            title="Previous Searches"
+            />
+        </View> 
+      </View>
+    )
+  } else {
+    return (
+      <View
+      style={styles.container}
+      >
+      <Image 
+      style={{
+        flex: 1,
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    source={require('./assets/Starsinthesky.jpg')} />
+      <View
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+        padding: 5,
+      }}
+      >
+      <Text>Previous Searches:
+        {`${this.state.previousSearches}`}
+      </Text>
         <Button 
           onPress={() => {
-            this.setState({resultsOpen: false})
+            this.setState({prevSearchesOpen: false})
           }}
           title="Go Back"
-        />
-        <Button
-          onPress={() => {
-            this.postSearch()
-          }}
-          title="Save Search"
-        />
-        <Button
-          onPress={() => {
-            this.getSearches()
-          }}
-          title="Previous Searches"
-        />
+          />  
+        </View>
       </View>
     )
   }

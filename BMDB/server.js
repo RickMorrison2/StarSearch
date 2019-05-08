@@ -23,16 +23,17 @@ db
 
 var Schema = mongoose.Schema;
 var searchSchema = new Schema({
-  id: Number,
   actor1: String,
   actor2: String,
   sharedMovies: String,
   sharedShows: String
 })
+var SearchModel = mongoose.model('SearchModel', searchSchema);
 
   app.get('/searches', (req, res) => {
     getSearches()
       .then(search => res.json(search))
+      // .then(console.log('got searches'))
       .catch(console.log)
   });
 
@@ -40,8 +41,14 @@ var searchSchema = new Schema({
     const actor1 = req.body.text1
     const actor2 = req.body.text2
     const { sharedMovies, sharedShows } = req.body
-    db.save({ actor1, actor2, sharedMovies, sharedShows });
-      res.status(201).json();
+    let newSchema = new SearchModel({
+      actor1: actor1,
+      actor2: actor2,
+      sharedMovies: sharedMovies,
+      sharedShows: sharedShows
+    })
+    newSchema.save((err) => console.log(err));
+      res.sendStatus(201);
   })
 
 let Searches = mongoose.model('searches', searchSchema);
