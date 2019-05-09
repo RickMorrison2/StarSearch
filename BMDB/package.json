@@ -12,7 +12,9 @@
     "expo": "^32.0.6",
     "node": "^12.1.0",
     "react": "16.5.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-simple-radio-button": "^2.7.3",
+    "yarn": "^1.15.2"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.0.0"
