@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
+let baseURL = 'https://rick-mvp-project.herokuapp.com'
+// let baseURL = 'http://10.0.75.1:3001'
 
 export default class ActorSearch extends React.Component {
   constructor(props) {
@@ -187,16 +189,20 @@ export default class ActorSearch extends React.Component {
         'Content-Type': 'application/json'
       }
     }
-    fetch('http://10.6.66.46:3001/searches', options)
-    .then(Alert.alert('', 'Search saved!'))
+    fetch(`${baseURL}/searches`, options)
+    .then(res => res.json())
+    .then(response => {
+      Alert.alert('', response.message)
+    })
+    .catch((err) => Alert.alert('', err.message))
   }
 
   getSearches() {
-    fetch('http://10.6.66.46:3001/searches')
+    fetch(`${baseURL}/searches`)
     .then(res => res.json())
     .then(data => {
       this.setState({
-        previousSearches: data
+        previousSearches: JSON.stringify(data)
       })
     })
     .then(this.setState({
@@ -240,8 +246,8 @@ export default class ActorSearch extends React.Component {
             {label: 'Movies/TV Shows', value: 1},
             {label: 'Actors', value: 2}
           ]}
-          initial={0}
-          onPress={(value) => this.props.handleSearchChange(value)}
+          initial={2}
+          onPress={(value) => this.props.handleSearchTypeChange(value)}
         />
         <TextInput
           style={{
@@ -294,25 +300,30 @@ export default class ActorSearch extends React.Component {
           justifyContent: 'center',
         }}
         source={require('./assets/Starsinthesky.jpg')} />
+    <View style={{
+      borderWidth: 1,
+      borderColor: 'rgba(0, 0, 0, 0.4)',
+      borderRadius: 10
+    }}>
       <Text style={{
         fontSize: 24,
         color: 'white',
         padding: 5,
         display: 'flex',
-        flexDirection: 'column',
+        // flexDirection: 'column',
         justifyContent: 'center',
         alignContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
         shadowColor: 'black'
       }}>{`${this.state.text1} and ${this.state.text2} have both been in: `}  
             <Text style={{
-              fontSize: 24,
+              fontSize: 18,
               color: 'white',
               padding: 5,
               // flex: 1,
               display: 'flex',
-              flexDirection: 'column',
+              // flexDirection: 'column',
               justifyContent: 'center',
               alignContent: 'center',
               alignItems: 'center',
@@ -322,6 +333,7 @@ export default class ActorSearch extends React.Component {
             `}
             </Text>
       </Text>
+      </View>
       <View
       style={{
         padding: 5,

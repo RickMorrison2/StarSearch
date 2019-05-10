@@ -44,6 +44,7 @@ var SearchModel = mongoose.model('SearchModel', searchSchema);
   });
 
   app.post('/searches', (req, res) => {
+    console.log('hello');
     const actor1 = req.body.text1
     const actor2 = req.body.text2
     const { sharedMovies, sharedShows } = req.body
@@ -53,8 +54,15 @@ var SearchModel = mongoose.model('SearchModel', searchSchema);
       sharedMovies: sharedMovies,
       sharedShows: sharedShows
     })
-    newSchema.save((err) => console.log(err));
-      res.sendStatus(201);
+    newSchema.save()
+    .then(newSearch => {
+      res.json({
+        message: 'Search has been saved!',
+        newSearch: newSearch
+      })
+    })
+    .catch(err => console.log(err))
+      // res.sendStatus(201);
   })
 
 let Searches = mongoose.model('searches', searchSchema);
