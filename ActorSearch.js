@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
+import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
-class ActorSearch extends React.Component {
+
+export default class ActorSearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,6 +29,7 @@ class ActorSearch extends React.Component {
     this.getShowsID2 = this.getShowsID2.bind(this)
     this.compareMovies = this.compareMovies.bind(this)
     this.compareShows = this.compareShows.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
   }
 
   searchDatabaseByName1(text) {
@@ -149,24 +152,24 @@ class ActorSearch extends React.Component {
   compareShows() {
     let sharedShows = [];
     let shows1 = Object.keys(this.state.shows1);
-    for (let i = 0; i < shows1.length; i++) {
-      let show = shows1[i];
-      if (this.state.shows2[show]) {
-        sharedShows.push(show);
+      for (let i = 0; i < shows1.length; i++) {
+        let show = shows1[i];
+        if (this.state.shows2[show]) {
+          sharedShows.push(show);
+        }
       }
-    }
-    if (sharedShows.length === 0) {
-      this.setState({
-        sharedShows: 'none'
-      }, () => this.setState({
-        resultsOpen: true
-      }))
-    } else {
-      this.setState({
-        sharedShows: sharedShows.join(', ')
-      }, () => this.setState({
-        resultsOpen: true
-      }))
+      if (sharedShows.length === 0) {
+        this.setState({
+          sharedShows: 'none'
+        }, () => this.setState({
+          resultsOpen: true
+        }))
+      } else {
+        this.setState({
+          sharedShows: sharedShows.join(', ')
+        }, () => this.setState({
+          resultsOpen: true
+        }))
     }
   }
 
@@ -201,12 +204,9 @@ class ActorSearch extends React.Component {
     }))
   }
 
-  handleSearch(state) {
-    this.searchDatabaseByName1(state.text1)
-    this.searchDatabaseByName2(state.text2)
-    this.setState({
-      resultsOpen: true
-    })
+  handleSearch() {
+    this.searchDatabaseByName1(this.state.text1)
+    this.searchDatabaseByName2(this.state.text2)
   }
 
   render() {
@@ -234,6 +234,15 @@ class ActorSearch extends React.Component {
           borderRadius: 5,
           backgroundColor: 'rgba(0,0,0,0.5)'
           }}>Star Search</Text>
+      <Text>Select your search type:</Text>
+        <RadioForm
+          radio_props={[
+            {label: 'Movies/TV Shows', value: 1},
+            {label: 'Actors', value: 2}
+          ]}
+          initial={0}
+          onPress={(value) => this.props.handleSearchChange(value)}
+        />
         <TextInput
           style={{
             height: 50, 
@@ -264,10 +273,13 @@ class ActorSearch extends React.Component {
           value={this.state.text2}
           onChangeText={async (text2) => await this.setState({text2})}
           />
+        <View>
         <Button
-          onPress={() => this.handleSearch(this.state)}
+          onPress={this.handleSearch}
           title="Search"
           />
+          
+        </View>
       </View>
   );
 } else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false) {
@@ -392,5 +404,3 @@ const styles = StyleSheet.create({
     alignContent: 'center'
   },
 });
-
-export default ActorSearch;

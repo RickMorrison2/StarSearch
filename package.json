@@ -20,7 +20,7 @@
     "babel-preset-expo": "^5.0.0"
   },
   "private": true,
-  "name": "BMDB",
+  "name": "app",
   "version": "1.0.0",
   "keywords": [],
   "author": "",
