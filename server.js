@@ -65,10 +65,8 @@ var SearchModel = mongoose.model('SearchModel', searchSchema);
       // res.sendStatus(201);
   })
 
-let Searches = mongoose.model('searches', searchSchema);
 const getSearches = () => {
-  // return Artists.findById(id, 'name header_img -id').exec();
-  return Searches.find({}).exec();
+  return SearchModel.find({}).exec();
 };
 
 const port = process.env.PORT || 3001;
