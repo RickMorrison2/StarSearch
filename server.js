@@ -14,7 +14,7 @@ const db = mongoose.connect(mongoURI, {
   useNewUrlParser: true,
 });
 
-db
+db  
   .then(db => console.log(`Connected to: ${mongoURI}`))
   .catch(err => {
     console.log(`There was a problem connecting to mongo at: ${mongoURI}`)
@@ -29,6 +29,12 @@ var searchSchema = new Schema({
   sharedShows: String
 })
 var SearchModel = mongoose.model('SearchModel', searchSchema);
+
+  app.get('/', (req, res) => {
+    res.json({
+      message: "server running"
+    })
+  })
 
   app.get('/searches', (req, res) => {
     getSearches()
