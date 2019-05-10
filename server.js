@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongoURI = 'mongodb://localhost/searches';
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/searches';
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
