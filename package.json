@@ -1,5 +1,5 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "android": "expo start --android",
