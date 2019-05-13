@@ -1,13 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import { Card, ListItem, Icon } from 'react-native-elements'
 
+let heroku = 'https://rick-mvp-project.herokuapp.com'
 
-let baseURL = 'https://rick-mvp-project.herokuapp.com'
-// let baseURL = 'http://10.0.75.1:3001'
-
-export default class ActorSearch extends React.Component {
+export default class TVSearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,10 +17,10 @@ export default class ActorSearch extends React.Component {
       movies2: '',
       shows1: '',
       shows2: '',
-      sharedMovies: ['none'],
-      sharedShows: ['none'],
+      sharedMovies: [],
+      sharedShows: [],
       previousSearches: '',
-      prevSearchesOpen: false,
+      prevSearchesOpen: false
     }
     this.getMoviesID1 = this.getMoviesID1.bind(this)
     this.getMoviesID2 = this.getMoviesID2.bind(this)
@@ -252,13 +249,13 @@ export default class ActorSearch extends React.Component {
         />
         <TextInput
           style={styles.input}
-          placeholder="Actor 1"
+          placeholder="Show 1"
           value={this.state.text1}
           onChangeText={async (text1) => await this.setState({text1})}
           />
         <TextInput
           style={styles.input}
-          placeholder="Actor 2"
+          placeholder="Show 2"
           value={this.state.text2}
           onChangeText={async (text2) => await this.setState({text2})}
           />
@@ -267,7 +264,6 @@ export default class ActorSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
-          
         </View>
       </View>
   );

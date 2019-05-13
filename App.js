@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} fr
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import ActorSearch from 'app/ActorSearch';
 import MovieSearch from 'app/MovieSearch';
+import TVSearch from 'app/TVSearch';
 
 const console = require('console');
 // const imdb = require('imdb-api');
@@ -49,21 +50,24 @@ export default class App extends React.Component {
           backgroundColor: 'rgba(0,0,0,0.5)'
           }}>Star Search</Text>
       <Text style={{
-
+        fontSize: 22,
+        color: 'white'
       }}>Select your search type:</Text>
       <RadioForm
         radio_props={[
-          {label: 'Movies/TV Shows', value: 1},
-          {label: 'Actors', value: 2}
+          {label: 'Movies', value: 1},
+          {label: 'Actors', value: 2},
+          {label: 'TV Shows', value: 3}
         ]}
-        initial={2}
+        initial={0}
         onPress={(value) => {this.setState({searchType: value})}}
+        style={{color: 'white', fontSize: '24'}}
        />
     </View>
     )
   } else if (this.state.searchType === 1) {
     return (
-      <View>
+      <View style={styles.container}>
         <MovieSearch
         handleSearchTypeChange={(value) => this.handleSearchTypeChange(value)}
         />
@@ -73,6 +77,14 @@ export default class App extends React.Component {
     return (
     <View style={styles.container}> 
         <ActorSearch
+        handleSearchTypeChange={(value) => this.handleSearchTypeChange(value)}
+        />
+      </View>
+    )
+  } else if (this.state.searchType === 3) {
+    return (
+      <View style={styles.container}>
+        <TVSearch
         handleSearchTypeChange={(value) => this.handleSearchTypeChange(value)}
         />
       </View>

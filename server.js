@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/searches';
 const express = require('express');
-const path = require('path');
+// const path = require('path');
 const cors = require('cors');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, './public')));
+// app.use(express.static(path.join(__dirname, './public')));
 
 const db = mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -29,6 +29,10 @@ var searchSchema = new Schema({
   sharedShows: String
 })
 var SearchModel = mongoose.model('SearchModel', searchSchema);
+
+const getSearches = () => {
+  return SearchModel.find({}).exec();
+};
 
   app.get('/', (req, res) => {
     res.json({
@@ -65,9 +69,6 @@ var SearchModel = mongoose.model('SearchModel', searchSchema);
       // res.sendStatus(201);
   })
 
-const getSearches = () => {
-  return SearchModel.find({}).exec();
-};
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log('listening on port ', port))

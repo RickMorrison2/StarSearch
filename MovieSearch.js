@@ -1,40 +1,136 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import { Card, ListItem, Icon } from 'react-native-elements'
 
-let heroku = 'https://rick-mvp-project.herokuapp.com'
+// const console = require('console');
 
-export default class App extends React.Component {
+let baseURL = 'https://rick-mvp-project.herokuapp.com'
+
+export default class MovieSearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       text1: '',
       text2: '',
       resultsOpen: false,
-      artist1ID: '',
-      artist2ID: '',
-      movies1: '',
-      movies2: '',
-      shows1: '',
-      shows2: '',
-      sharedMovies: 'Loading...',
-      sharedShows: 'Loading...',
+      movie1ID: '',
+      movie2ID: '',
+      actors1: '',
+      actors2: '',
+      sharedActors: [],
       previousSearches: '',
       prevSearchesOpen: false
     }
+    this.getActorsMovie1 = this.getActorsMovie1.bind(this)
+    this.getActorsMovie2 = this.getActorsMovie2.bind(this)
+    this.searchDatabaseByName1 = this.searchDatabaseByName1.bind(this)
+    this.searchDatabaseByName2 = this.searchDatabaseByName2.bind(this)
+    this.compareActors = this.compareActors.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
   }
 
-  handleSearch() {
-    this.searchDatabaseByName1(this.state.text1)
-    this.searchDatabaseByName2(this.state.text2)
+  searchDatabaseByName1(text) {
+    let key = 'b8127ddc3f4de9e8da7653f329851b5e'
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    .then(result => result.json())
+    .then(data => {
+      this.setState({
+        movie1ID: data.results[0].id
+      })
+      return data.results[0].id
+    })
+    .then(id => {
+      this.getActorsMovie1(id)
+      return id;
+    })
   }
+
+    
+  getActorsMovie1(id) {
+    let key = 'b8127ddc3f4de9e8da7653f329851b5e'
+    fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${key}`)
+    .then(result => result.json())
+    .then(data => {
+      let credits = data["cast"];
+      let actors = {};
+      for (let i = 0; i < credits.length; i++) {
+        actors[credits[i]['name']] = 1
+      }
+      this.setState({
+        actors1: actors,
+      }, this.searchDatabaseByName2(this.state.text2))
+    })
+  }
+
+  searchDatabaseByName2(text) {
+    let key = 'b8127ddc3f4de9e8da7653f329851b5e'
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    .then(result => result.json())
+    .then(data => {
+      this.setState({
+        movie2ID: data.results[0].id
+      })
+      return data.results[0].id})
+    .then(id => {
+      this.getActorsMovie2(id)
+      return id;
+    })
+  }
+
+    
+  getActorsMovie2(id) {
+    let key = 'b8127ddc3f4de9e8da7653f329851b5e'
+    fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${key}`)
+    .then(result => result.json())
+    .then(data => {
+      let credits = data["cast"];
+      let actors = {};
+      for (let i = 0; i < credits.length; i++) {
+        actors[credits[i]['name']] = 1
+      }
+      this.setState({
+        actors2: actors
+      }, () => this.compareActors())
+    })
+  }
+    
+  compareActors() {
+    let sharedActors = [];
+    if (this.state.actors1.length === 0) {
+      Alert.alert('no actors1')
+    }
+    let actors1 = Object.keys(this.state.actors1);
+    // Alert.alert('actors1', JSON.stringify(actors1))
+    // Alert.alert('actors2', JSON.stringify(this.state.actors2))
+    for (let i = 0; i < actors1.length; i++) {
+      let actor = actors1[i];
+      if (this.state.actors2[actor]) {
+        sharedActors.push(actor);
+      }
+    }
+    if (sharedActors.length === 0) {
+      this.setState({
+        sharedActors: ['none']
+      }, () => this.setState({
+        resultsOpen: true
+      }))
+    } else {
+      this.setState({
+        sharedActors: sharedActors
+      }, () => this.setState({
+        resultsOpen: true
+      }))
+      // }) () => Alert.alert('actor comparison', JSON.stringify(this.state)))
+    }
+  }
+
 
   postSearch() {
     const body = {
       text1: this.state.text1,
       text2: this.state.text2,
-      sharedMovies: this.state.sharedMovies,
-      sharedShows: this.state.sharedShows
+      sharedActors: this.state.shareActors
     }
     const options = {
       method: 'POST',
@@ -43,21 +139,30 @@ export default class App extends React.Component {
         'Content-Type': 'application/json'
       }
     }
-    fetch(`${heroku}/searches`, options)
-    .then(Alert.alert('', 'Search saved!'))
+    fetch(`${baseURL}/searches`, options)
+    .then(res => res.json())
+    .then(response => {
+      Alert.alert('', response.message)
+    })
+    .catch((err) => Alert.alert('', err.message))
   }
 
   getSearches() {
-    fetch(`${heroku}/searches`)
+    fetch(`${baseURL}/searches`)
     .then(res => res.json())
     .then(data => {
       this.setState({
-        previousSearches: JSON.stringify(data)
+        previousSearches: data
       })
     })
     .then(this.setState({
       prevSearchesOpen: true
     }))
+  }
+
+  handleSearch() {
+    this.searchDatabaseByName1(this.state.text1)
+    // this.searchDatabaseByName2(this.state.text2)
   }
 
   render() {
@@ -79,42 +184,29 @@ export default class App extends React.Component {
           borderRadius: 5,
           backgroundColor: 'rgba(0,0,0,0.5)'
           }}>Star Search</Text>
-      <Text>Select your search type:</Text>
+      <Text style={{
+        fontSize: 22,
+        color: 'white'
+      }}>Select your search type:</Text>
         <RadioForm
           radio_props={[
-            {label: 'Movies/TV Shows', value: 1},
-            {label: 'Actors', value: 2}
+            {label: 'Movies', value: 1},
+            {label: 'Actors', value: 2},
+            {label: 'TV Shows', value: 3}
           ]}
-          initial={1}
+          initial={0}
           onPress={(value) => this.props.handleSearchTypeChange(value)}
+          style={{color: 'white', fontSize: '24'}}
         />
         <TextInput
-          style={{
-            height: 50, 
-            width: 200, 
-            borderColor: 'gray', 
-            borderWidth: 1,
-            borderRadius: 5,
-            padding: 10,
-            margin: 5,
-            backgroundColor: 'rgba(255, 255, 255, 0.7)'
-          }}
-          placeholder="Movie/Show 1"
+          style={styles.input}
+          placeholder="Movie 1"
           value={this.state.text1}
           onChangeText={async (text1) => await this.setState({text1})}
           />
         <TextInput
-          style={{
-            height: 50, 
-            width: 200, 
-            borderColor: 'gray', 
-            borderWidth: 1,
-            borderRadius: 5,
-            padding: 10,
-            margin: 5,
-            backgroundColor: 'rgba(255, 255, 255, 0.7)'
-          }}
-          placeholder="Movie/Show 2"
+          style={styles.input}
+          placeholder="Movie 2"
           value={this.state.text2}
           onChangeText={async (text2) => await this.setState({text2})}
           />
@@ -133,9 +225,9 @@ export default class App extends React.Component {
         style={styles.image}
         source={require('./assets/Starsinthesky.jpg')} />
     <View style={{
-      borderWidth: 1,
-      borderColor: 'rgba(0, 0, 0, 0.4)',
-      borderRadius: 10
+      padding: 25,
+      margin: 10,
+      height: '82%'
     }}>
       <Text style={{
         fontSize: 24,
@@ -148,23 +240,21 @@ export default class App extends React.Component {
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         shadowColor: 'black'
-      }}>{`${this.state.text1} and ${this.state.text2} have both been in: `}  
-            <Text style={{
-              fontSize: 18,
-              color: 'white',
-              padding: 5,
-              // flex: 1,
-              display: 'flex',
-              // flexDirection: 'column',
-              justifyContent: 'center',
-              alignContent: 'center',
-              alignItems: 'center',
-            }}>{`
-            Movies: ${this.state.sharedMovies}
-            TV Shows: ${this.state.sharedShows}
-            `}
-            </Text>
-      </Text>
+      }}>{`These actors have been in both ${this.state.text1} and ${this.state.text2}: `}  
+          </Text>
+          <View style={{height: '78%'}}>
+          <ScrollView>
+            <Card title="Actors" containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+              {
+                this.state.sharedActors.map(actor => (
+                  <View key={actor} style={styles.card}>
+                    <Text key={actor}>{actor}</Text>
+                  </View>
+                ))
+              }
+            </Card>
+          </ScrollView>
+          </View>
       </View>
       <View
       style={{
@@ -208,7 +298,7 @@ export default class App extends React.Component {
     >
     <Image 
     style={styles.image}
-  source={require('./assets/Starsinthesky.jpg')} />
+    source={require('./assets/Starsinthesky.jpg')} />
     <View
     style={{
       display: 'flex',
@@ -217,9 +307,17 @@ export default class App extends React.Component {
       padding: 5,
     }}
     >
-    <Text>Previous Searches:
-      {`${this.state.previousSearches}`}
-    </Text>
+      <View>
+        <Card title="Previous Searches">
+          {
+            this.state.previousSearches.map(search => {
+              <View key={search} style={styles.card} >
+                <Text key={search}>{search}</Text>
+              </View>
+            })
+          }
+        </Card>
+      </View>
       <Button 
         onPress={() => {
           this.setState({prevSearchesOpen: false})
@@ -239,7 +337,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   image: {
     flex: 1,
@@ -247,5 +345,24 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     justifyContent: 'center',
+  },
+  input: {
+    height: 50, 
+    width: 200, 
+    borderColor: 'gray', 
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    margin: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)'
+  },
+  card: {
+    fontSize: 24,
+    borderColor: 'gray', 
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    margin: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)'
   }
 });
