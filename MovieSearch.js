@@ -244,7 +244,7 @@ export default class MovieSearch extends React.Component {
           </Text>
           <View style={{height: '78%'}}>
           <ScrollView>
-            <Card title="Actors" containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+            <Card containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
               {
                 this.state.sharedActors.map(actor => (
                   <View key={actor} style={styles.card}>
