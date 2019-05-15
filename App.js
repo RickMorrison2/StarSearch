@@ -36,7 +36,8 @@ export default class App extends React.Component {
           height: '100%',
           justifyContent: 'center',
         }}
-        source={require('./assets/Starsinthesky.jpg')} />
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
       <Text style={{
           fontSize: 30, 
           color: 'white',

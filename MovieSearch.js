@@ -16,9 +16,14 @@ export default class MovieSearch extends React.Component {
       resultsOpen: false,
       movie1ID: '',
       movie2ID: '',
+      movie1Poster: '',
+      movie2Poster: '',
       actors1: '',
       actors2: '',
+      actors1Photos: '',
+      actors2Photos: '',
       sharedActors: [],
+      sharedActorPhotos: [],
       previousSearches: '',
       prevSearchesOpen: false
     }
@@ -36,7 +41,8 @@ export default class MovieSearch extends React.Component {
     .then(result => result.json())
     .then(data => {
       this.setState({
-        movie1ID: data.results[0].id
+        movie1ID: data.results[0].id,
+        movie1Poster: data.results[0].poster_path
       })
       return data.results[0].id
     })
@@ -54,11 +60,15 @@ export default class MovieSearch extends React.Component {
     .then(data => {
       let credits = data["cast"];
       let actors = {};
+      let photos = {};
       for (let i = 0; i < credits.length; i++) {
-        actors[credits[i]['name']] = 1
+        let actor = credits[i]['name']
+        actors[actor] = 1
+        photos[actor] = credits[i]['profile_path']
       }
       this.setState({
         actors1: actors,
+        actors1Photos: photos
       }, this.searchDatabaseByName2(this.state.text2))
     })
   }
@@ -69,7 +79,8 @@ export default class MovieSearch extends React.Component {
     .then(result => result.json())
     .then(data => {
       this.setState({
-        movie2ID: data.results[0].id
+        movie2ID: data.results[0].id,
+        movie2Poster: data.results[0].poster_path
       })
       return data.results[0].id})
     .then(id => {
@@ -86,17 +97,22 @@ export default class MovieSearch extends React.Component {
     .then(data => {
       let credits = data["cast"];
       let actors = {};
+      let photos = {};
       for (let i = 0; i < credits.length; i++) {
-        actors[credits[i]['name']] = 1
+        let actor = credits[i]['name']
+        actors[actor] = 1
+        photos[actor] = credits[i]['profile_path']
       }
       this.setState({
-        actors2: actors
+        actors2: actors,
+        actors2Photos: photos
       }, () => this.compareActors())
     })
   }
     
   compareActors() {
     let sharedActors = [];
+    // let sharedActorPhotos = [];
     if (this.state.actors1.length === 0) {
       Alert.alert('no actors1')
     }
@@ -107,6 +123,7 @@ export default class MovieSearch extends React.Component {
       let actor = actors1[i];
       if (this.state.actors2[actor]) {
         sharedActors.push(actor);
+        // sharedActorPhotos.push(this.state.actor1Photos[actor])
       }
     }
     if (sharedActors.length === 0) {
@@ -117,10 +134,11 @@ export default class MovieSearch extends React.Component {
       }))
     } else {
       this.setState({
-        sharedActors: sharedActors
+        sharedActors: sharedActors,
+        // sharedActorPhotos: sharedActorPhotos
       }, () => this.setState({
         resultsOpen: true
-      }))
+      }, () => Alert.alert('actor 1 photos', JSON.stringify(this.state.actors1Photos))))
       // }) () => Alert.alert('actor comparison', JSON.stringify(this.state)))
     }
   }
@@ -171,7 +189,8 @@ export default class MovieSearch extends React.Component {
       <View style={styles.container}>
       <Image 
         style={styles.image}
-        source={require('./assets/Starsinthesky.jpg')} />
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
         <Text style={{
           fontSize: 30, 
           color: 'white',
@@ -223,7 +242,8 @@ export default class MovieSearch extends React.Component {
     <View style={styles.container}>
       <Image 
         style={styles.image}
-        source={require('./assets/Starsinthesky.jpg')} />
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
     <View style={{
       padding: 25,
       margin: 10,
@@ -242,12 +262,50 @@ export default class MovieSearch extends React.Component {
         shadowColor: 'black'
       }}>{`These actors have been in both ${this.state.text1} and ${this.state.text2}: `}  
           </Text>
-          <View style={{height: '78%'}}>
+        <View style={{
+          height: 200,
+          width: 300,
+          display: 'flex',
+          // justifyContent: 'space-between',
+          // alignContent: 'space-between',
+          flexWrap: 'wrap'
+        }}>
+          <Image
+          style={{
+            height: 200,
+            width: 120,
+            padding: 10,
+            margin: 25
+          }}
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie1Poster}`}}
+          />
+          <Image
+          style={{
+            height: 200,
+            width: 120,
+            padding: 10,
+            margin: 25
+          }}          
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie2Poster}`}}
+          />
+        </View>
+          <View style={{
+            height: '78%',
+            padding: 10,
+            margin: 10
+            }}>
           <ScrollView>
             <Card containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
               {
                 this.state.sharedActors.map(actor => (
                   <View key={actor} style={styles.card}>
+                    <Image
+                    source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actors1Photos[actor]}`}}
+                    style={{
+                      height: 100,
+                      width: 60
+                    }}
+                    />
                     <Text key={actor}>{actor}</Text>
                   </View>
                 ))
@@ -298,7 +356,8 @@ export default class MovieSearch extends React.Component {
     >
     <Image 
     style={styles.image}
-    source={require('./assets/Starsinthesky.jpg')} />
+    // source={require('./assets/Starsinthesky.jpg')} />
+    source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
     <View
     style={{
       display: 'flex',

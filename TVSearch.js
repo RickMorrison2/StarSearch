@@ -1,8 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import { Card, ListItem, Icon, CheckBox } from 'react-native-elements'
 
-let heroku = 'https://rick-mvp-project.herokuapp.com'
+// const console = require('console');
+
+let baseURL = 'https://rick-mvp-project.herokuapp.com'
 
 export default class TVSearch extends React.Component {
   constructor(props) {
@@ -11,175 +14,124 @@ export default class TVSearch extends React.Component {
       text1: '',
       text2: '',
       resultsOpen: false,
-      artist1ID: '',
-      artist2ID: '',
-      movies1: '',
-      movies2: '',
-      shows1: '',
-      shows2: '',
-      sharedMovies: [],
-      sharedShows: [],
+      show1ID: '',
+      show2ID: '',
+      actors1: '',
+      actors2: '',
+      sharedActors: [],
       previousSearches: '',
-      prevSearchesOpen: false
+      prevSearchesOpen: false,
+      adult: false
     }
-    this.getMoviesID1 = this.getMoviesID1.bind(this)
-    this.getMoviesID2 = this.getMoviesID2.bind(this)
+    this.getActorsShow1 = this.getActorsShow1.bind(this)
+    this.getActorsShow2 = this.getActorsShow2.bind(this)
     this.searchDatabaseByName1 = this.searchDatabaseByName1.bind(this)
     this.searchDatabaseByName2 = this.searchDatabaseByName2.bind(this)
-    this.getShowsID1 = this.getShowsID1.bind(this)
-    this.getShowsID2 = this.getShowsID2.bind(this)
-    this.compareMovies = this.compareMovies.bind(this)
-    this.compareShows = this.compareShows.bind(this)
+    this.compareActors = this.compareActors.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
   }
 
   searchDatabaseByName1(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/person?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    fetch(`https://api.themoviedb.org/3/search/tv?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
     .then(result => result.json())
     .then(data => {
       this.setState({
-        artist1ID: data.results[0].id
+        movie1ID: data.results[0].id
       })
       return data.results[0].id
     })
     .then(id => {
-      this.getMoviesID1(id)
+      this.getActorsShow1(id)
       return id;
     })
   }
 
     
-  getMoviesID1(id) {
+  getActorsShow1(id) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${key}`)
+    fetch(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${key}`)
     .then(result => result.json())
     .then(data => {
       let credits = data["cast"];
-      let movies = {};
+      let actors = {};
       for (let i = 0; i < credits.length; i++) {
-        movies[credits[i]['title']] = 1
+        actors[credits[i]['name']] = 1
       }
       this.setState({
-        movies1: movies,
-      }, () => this.getShowsID1(id))
+        actors1: actors,
+      }, this.searchDatabaseByName2(this.state.text2))
     })
   }
 
   searchDatabaseByName2(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/person?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    fetch(`https://api.themoviedb.org/3/search/tv?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
     .then(result => result.json())
     .then(data => {
       this.setState({
-        artist2ID: data.results[0].id
+        movie2ID: data.results[0].id
       })
       return data.results[0].id})
     .then(id => {
-      this.getMoviesID2(id)
+      this.getActorsShow2(id)
       return id;
     })
   }
 
     
-  getMoviesID2(id) {
+  getActorsShow2(id) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${key}`)
+    fetch(`https://api.themoviedb.org/3/tv/${id}/credits?api_key=${key}`)
     .then(result => result.json())
     .then(data => {
       let credits = data["cast"];
-      let movies = {};
+      let actors = {};
       for (let i = 0; i < credits.length; i++) {
-        movies[credits[i]['title']] = 1
+        actors[credits[i]['name']] = 1
       }
       this.setState({
-        movies2: movies,
-      }, () => this.getShowsID2(id))
+        actors2: actors
+      }, () => this.compareActors())
     })
   }
     
-  getShowsID1(id) {
-    let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/person/${id}/tv_credits?api_key=${key}`)
-    .then(result => result.json())
-    .then(data => {
-      let credits = data["cast"];
-      let shows = {};
-      for (let i = 0; i < credits.length; i++) {
-        shows[credits[i]['name']] = 1
-      }
-      this.setState({
-        shows1: shows,
-      })
-    })
-  }
-    
-  getShowsID2(id) {
-    let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/person/${id}/tv_credits?api_key=${key}`)
-    .then(result => result.json())
-    .then(data => {
-      let credits = data["cast"];
-      let shows = {};
-      for (let i = 0; i < credits.length; i++) {
-        shows[credits[i]['name']] = 1
-      }
-      this.setState({
-        shows2: shows,
-      }, () => this.compareMovies())
-    })
-  }
-
-  compareMovies() {
-    let sharedMovies = [];
-    let movies1 = Object.keys(this.state.movies1);
-    for (let i = 0; i < movies1.length; i++) {
-      let movie = movies1[i];
-      if (this.state.movies2[movie]) {
-        sharedMovies.push(movie);
+  compareActors() {
+    let sharedActors = [];
+    if (this.state.actors1.length === 0) {
+      Alert.alert('no actors1')
+    }
+    let actors1 = Object.keys(this.state.actors1);
+    // Alert.alert('actors1', JSON.stringify(actors1))
+    // Alert.alert('actors2', JSON.stringify(this.state.actors2))
+    for (let i = 0; i < actors1.length; i++) {
+      let actor = actors1[i];
+      if (this.state.actors2[actor]) {
+        sharedActors.push(actor);
       }
     }
-    if (sharedMovies.length === 0) {
+    if (sharedActors.length === 0) {
       this.setState({
-        sharedMovies: ['none']
-      }, () => this.compareShows())
+        sharedActors: ['none']
+      }, () => this.setState({
+        resultsOpen: true
+      }))
     } else {
       this.setState({
-        sharedMovies: sharedMovies
-      }, () => this.compareShows())
+        sharedActors: sharedActors
+      }, () => this.setState({
+        resultsOpen: true
+      }))
+      // }) () => Alert.alert('actor comparison', JSON.stringify(this.state)))
     }
   }
 
-  compareShows() {
-    let sharedShows = [];
-    let shows1 = Object.keys(this.state.shows1);
-      for (let i = 0; i < shows1.length; i++) {
-        let show = shows1[i];
-        if (this.state.shows2[show]) {
-          sharedShows.push(show);
-        }
-      }
-      if (sharedShows.length === 0) {
-        this.setState({
-          sharedShows: ['none']
-        }, () => this.setState({
-          resultsOpen: true
-        }))
-      } else {
-        this.setState({
-          sharedShows: sharedShows
-        }, () => this.setState({
-          resultsOpen: true
-        }))
-    }
-  }
 
   postSearch() {
     const body = {
       text1: this.state.text1,
       text2: this.state.text2,
-      sharedMovies: this.state.sharedMovies,
-      sharedShows: this.state.sharedShows
+      sharedActors: this.state.shareActors
     }
     const options = {
       method: 'POST',
@@ -201,7 +153,7 @@ export default class TVSearch extends React.Component {
     .then(res => res.json())
     .then(data => {
       this.setState({
-        previousSearches: JSON.stringify(data)
+        previousSearches: data
       })
     })
     .then(this.setState({
@@ -211,7 +163,13 @@ export default class TVSearch extends React.Component {
 
   handleSearch() {
     this.searchDatabaseByName1(this.state.text1)
-    this.searchDatabaseByName2(this.state.text2)
+    // this.searchDatabaseByName2(this.state.text2)
+  }
+
+  handleAdultCheck() {
+    this.setState({
+      adult: !this.state.adult
+    })
   }
 
   render() {
@@ -264,6 +222,13 @@ export default class TVSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
+        <CheckBox
+          center
+          checkedIcon='dot-circle-o'
+          uncheckedIcon='circle-o'
+          title="Allow adult content"
+          checked={this.state.adult}
+        />
         </View>
       </View>
   );
@@ -289,24 +254,15 @@ export default class TVSearch extends React.Component {
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         shadowColor: 'black'
-      }}>{`${this.state.text1} and ${this.state.text2} have both been in: `}  
+      }}>{`These actors have been in both ${this.state.text1} and ${this.state.text2}: `}  
           </Text>
           <View style={{height: '78%'}}>
           <ScrollView>
-            <Card title="Movies" containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+            <Card containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
               {
-                this.state.sharedMovies.map(movie => (
-                  <View key={movie} style={styles.card}>
-                    <Text key={movie}>{movie}</Text>
-                  </View>
-                ))
-              }
-            </Card>
-            <Card title="TV Shows" containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
-              {
-                this.state.sharedShows.map(show => (
-                  <View key={show} style={styles.card}>
-                    <Text key={show}>{show}</Text>
+                this.state.sharedActors.map(actor => (
+                  <View key={actor} style={styles.card}>
+                    <Text key={actor}>{actor}</Text>
                   </View>
                 ))
               }
@@ -365,9 +321,17 @@ export default class TVSearch extends React.Component {
       padding: 5,
     }}
     >
-    <Text>Previous Searches:
-      {`${this.state.previousSearches}`}
-    </Text>
+      <View>
+        <Card title="Previous Searches">
+          {
+            this.state.previousSearches.map(search => {
+              <View key={search} style={styles.card} >
+                <Text key={search}>{search}</Text>
+              </View>
+            })
+          }
+        </Card>
+      </View>
       <Button 
         onPress={() => {
           this.setState({prevSearchesOpen: false})

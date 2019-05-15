@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import { Card, ListItem, Icon } from 'react-native-elements'
+import { Card, ListItem, Icon, CheckBox } from 'react-native-elements'
 
 
 let baseURL = 'https://rick-mvp-project.herokuapp.com'
@@ -24,6 +24,7 @@ export default class ActorSearch extends React.Component {
       sharedShows: ['none'],
       previousSearches: '',
       prevSearchesOpen: false,
+      adult: false
     }
     this.getMoviesID1 = this.getMoviesID1.bind(this)
     this.getMoviesID2 = this.getMoviesID2.bind(this)
@@ -38,11 +39,11 @@ export default class ActorSearch extends React.Component {
 
   searchDatabaseByName1(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/person?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    fetch(`https://api.themoviedb.org/3/search/person?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
     .then(result => result.json())
     .then(data => {
       this.setState({
-        artist1ID: data.results[0].id
+        artist1ID: data.results[0].id,
       })
       return data.results[0].id
     })
@@ -71,11 +72,11 @@ export default class ActorSearch extends React.Component {
 
   searchDatabaseByName2(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/person?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    fetch(`https://api.themoviedb.org/3/search/person?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
     .then(result => result.json())
     .then(data => {
       this.setState({
-        artist2ID: data.results[0].id
+        artist2ID: data.results[0].id,
       })
       return data.results[0].id})
     .then(id => {
@@ -217,6 +218,18 @@ export default class ActorSearch extends React.Component {
     this.searchDatabaseByName2(this.state.text2)
   }
 
+  handleAdultCheck() {
+    if (this.state.adult === true) {
+      this.setState({
+      adult: false
+    })
+  } else {
+    this.setState({
+      adult: true
+    })
+  }
+}
+
   render() {
     if (this.state.resultsOpen === false) {
     return (
@@ -267,7 +280,14 @@ export default class ActorSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
-          
+        <CheckBox
+          center
+          // checkedIcon='dot-circle-o'
+          // uncheckedIcon='circle-o'
+          title="Allow adult content"
+          checked={this.state.adult}
+          onPress={() => this.handleAdultCheck()}
+        />
         </View>
       </View>
   );
