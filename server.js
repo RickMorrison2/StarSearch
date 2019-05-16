@@ -22,6 +22,13 @@ db
   });
 
 var Schema = mongoose.Schema;
+var SearchSchema = new Schema({
+  actor1: String,
+  actor2: String,
+  sharedMovies: String,
+  sharedShows: String
+})
+
 var actorSearchSchema = new Schema({
   actor1: String,
   actor2: String,
