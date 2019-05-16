@@ -36,21 +36,21 @@ var actorSearchSchema = new Schema({
   sharedMovies: String,
   sharedShows: String
 })
-var ActorSearchModel = mongoose.model('SearchModel', actorSearchSchema);
+var ActorSearchModel = mongoose.model('ActorSearchModel', actorSearchSchema);
 
 var movieSearchSchema = new Schema({
   movie1: String,
   movie2: String,
   sharedActors: String
 })
-var MovieSearchModel = mongoose.model('SearchModel', movieSearchSchema);
+var MovieSearchModel = mongoose.model('MovieSearchModel', movieSearchSchema);
 
 var showSearchSchema = new Schema({
   show1: String,
   show2: String,
   sharedActors: String
 })
-var ShowSearchModel = mongoose.model('SearchModel', showSearchSchema);
+var ShowSearchModel = mongoose.model('ShowSearchModel', showSearchSchema);
 
 const getSearches = () => {
   return SearchModel.find({}).exec();
