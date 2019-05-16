@@ -151,7 +151,7 @@ export default class MovieSearch extends React.Component {
         'Content-Type': 'application/json'
       }
     }
-    fetch(`${baseURL}/searches`, options)
+    fetch(`${baseURL}/movieSearches`, options)
     .then(res => res.json())
     .then(response => {
       Alert.alert('', response.message)
@@ -160,7 +160,7 @@ export default class MovieSearch extends React.Component {
   }
 
   getSearches() {
-    fetch(`${baseURL}/searches`)
+    fetch(`${baseURL}/movieSearches`)
     .then(res => res.json())
     .then(data => {
       this.setState({
@@ -191,6 +191,12 @@ export default class MovieSearch extends React.Component {
         style={styles.image}
         // source={require('./assets/Starsinthesky.jpg')} />
         source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 170
+        }}>
         <Text style={{
           fontSize: 30, 
           color: 'white',
@@ -245,6 +251,9 @@ export default class MovieSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
+      </View>
+      </View>
+      <View style={styles.checkBox}>
         <CheckBox
           center
           // checkedIcon='dot-circle-o'
@@ -253,7 +262,7 @@ export default class MovieSearch extends React.Component {
           checked={this.state.adult}
           onPress={() => this.handleAdultCheck()}
         />
-        </View>
+      </View>
       </View>
   );
 } else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false) {
@@ -271,19 +280,6 @@ export default class MovieSearch extends React.Component {
       alignItems: 'center',
       flexDirection: 'column'
     }}>
-      {/* <Text style={{
-        fontSize: 24,
-        color: 'white',
-        padding: 5,
-        display: 'flex',
-        // flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        shadowColor: 'black'
-      }}>{`These actors have been in both ${this.state.text1} and ${this.state.text2}: `}  
-          </Text> */}
         <View style={{
           height: 200,
           width: 350,
@@ -296,18 +292,14 @@ export default class MovieSearch extends React.Component {
           <Image
           style={{
             height: 200,
-            width: 140,
-            // padding: 10,
-            // margin: 25
+            width: 140
           }}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie1Poster}`}}
           />
           <Image
           style={{
             height: 200,
-            width: 140,
-            // padding: 10,
-            // margin: 25
+            width: 140
           }}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie2Poster}`}}
           />
@@ -441,23 +433,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.7)'
   },
   cardView: {
-    // padding: 10,
-    // margin: 5,
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center'
   },
   cardText: {
     width: '70%',
     fontSize: 20,
     color: 'black',
-    // padding: 10,
     margin: 10,
-    // flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  checkBox: {
+    // flex: 1,
+    // justifyContent: 'flex-end',
+    marginTop: 180
   }
 });

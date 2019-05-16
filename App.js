@@ -13,7 +13,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchType: 0
+      searchType: 1
     }
     this.handleSearchTypeChange = this.handleSearchTypeChange.bind(this)
   }

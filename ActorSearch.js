@@ -26,8 +26,8 @@ export default class ActorSearch extends React.Component {
       shows2: '',
       show1Poster: '',
       show2Poster: '',
-      sharedMovies: ['None'],
-      sharedShows: ['None'],
+      sharedMovies: [],
+      sharedShows: [],
       previousSearches: '',
       prevSearchesOpen: false,
       adult: false
@@ -168,7 +168,7 @@ export default class ActorSearch extends React.Component {
     }
     if (sharedMovies.length === 0) {
       this.setState({
-        sharedMovies: ['none']
+        sharedMovies: []
       }, () => this.compareShows())
     } else {
       this.setState({
@@ -188,7 +188,7 @@ export default class ActorSearch extends React.Component {
       }
       if (sharedShows.length === 0) {
         this.setState({
-          sharedShows: ['none']
+          sharedShows: []
         }, () => this.setState({
           resultsOpen: true
         }))
@@ -215,7 +215,7 @@ export default class ActorSearch extends React.Component {
         'Content-Type': 'application/json'
       }
     }
-    fetch(`${baseURL}/searches`, options)
+    fetch(`${baseURL}/actorSearches`, options)
     .then(res => res.json())
     .then(response => {
       Alert.alert('', response.message)
@@ -224,7 +224,7 @@ export default class ActorSearch extends React.Component {
   }
 
   getSearches() {
-    fetch(`${baseURL}/searches`)
+    fetch(`${baseURL}/actorSearches`)
     .then(res => res.json())
     .then(data => {
       this.setState({
@@ -261,6 +261,12 @@ export default class ActorSearch extends React.Component {
         style={styles.image}
         // source={require('./assets/Starsinthesky.jpg')} />
         source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 170
+        }}>
         <Text style={{
           fontSize: 30, 
           color: 'white',
@@ -315,6 +321,8 @@ export default class ActorSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
+          </View>
+          <View style={styles.checkBox}>
         <CheckBox
           center
           // checkedIcon='dot-circle-o'
@@ -324,9 +332,152 @@ export default class ActorSearch extends React.Component {
           onPress={() => this.handleAdultCheck()}
         />
         </View>
+        </View>
       </View>
   );
-} else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false) {
+} else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false && this.state.sharedShows.length === 0) {
+  return (
+    <View style={styles.container}>
+      <Image 
+        style={styles.image}
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+    <View style={{
+      // padding: 25,
+      // margin: 10,
+      height: '80%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column'
+    }}>
+      <View style={{
+        height: 200,
+        width: 350,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        paddingTop: 8
+      }}>
+        <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // margin: 25
+        }}>
+          <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text1}
+          </Text>
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 25
+          }}
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor1Photo}`}}
+          />
+          </View>
+          <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // padding: 25,
+          paddingLeft: 60
+        }}>
+          <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text2}
+          </Text>
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 25
+          }}          
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor2Photo}`}}
+          />
+          </View>
+        </View>
+          <View style={{
+            paddingTop: 25,
+            height: '65%',
+            flex: 1}}>
+          <ScrollView style={{
+            flex: 1
+          }}>
+            <Card title="Movies" titleStyle={{color: 'white'}} containerStyle={{padding: 3, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 10}}>
+              {
+                this.state.sharedMovies.map(movie => (
+                  <View key={movie} style={styles.cardView}>
+                    <Image
+                    source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie1Poster[movie]}`}}
+                    style={{
+                      height: 100,
+                      width: 70,
+                      padding: 2,
+                      margin: 2
+                    }}
+                    />
+                    <Text key={movie} style={styles.cardText}>{movie}</Text>
+                  </View>
+                ))
+              }
+            </Card>
+          </ScrollView>
+          </View>
+      </View>
+      <View style={{
+        direction: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+      <View
+      style={{
+        padding: 5,
+        // width: '50%'
+      }}
+      >
+        <Button 
+          onPress={() => {
+            this.setState({resultsOpen: false})
+          }}
+          title="Go Back"
+          />  
+      </View>
+      <View style={{
+        padding: 5,
+        width: '80%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'space-around'
+      }}>
+        <Button
+          onPress={() => {
+            this.postSearch()
+          }}
+          title="Save Search"
+          />
+        <Button
+          onPress={() => {
+            this.getSearches()
+          }}
+          title="Previous Searches"
+          />
+      </View> 
+      </View>
+    </View>
+  )
+} else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false && this.state.sharedShows.length !== 0 && this.state.sharedMovies.length !== 0) {
   return (
     <View style={styles.container}>
       <Image 
@@ -486,6 +637,290 @@ export default class ActorSearch extends React.Component {
       </View>
     </View>
   )
+} else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false && this.state.sharedMovies.length === 0) {
+  return (
+    <View style={styles.container}>
+      <Image 
+        style={styles.image}
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+    <View style={{
+      // padding: 25,
+      // margin: 10,
+      height: '80%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column'
+    }}>
+      <View style={{
+        height: 200,
+        width: 350,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        paddingTop: 8
+      }}>
+        <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // margin: 25
+        }}>
+          <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text1}
+          </Text>
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 25
+          }}
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor1Photo}`}}
+          />
+          </View>
+          <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // padding: 25,
+          paddingLeft: 60
+        }}>
+          <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text2}
+          </Text>
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 25
+          }}          
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor2Photo}`}}
+          />
+          </View>
+        </View>
+          <View style={{
+            paddingTop: 25,
+            height: '65%',
+            flex: 1}}>
+          <ScrollView style={{
+            flex: 1
+          }}>
+            <Card title="TV Shows" titleStyle={{color: 'white'}} containerStyle={{padding: 3, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 10}}>
+              {
+                this.state.sharedShows.map(show => (
+                  <View key={show} style={styles.cardView}>
+                    <Image
+                    source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.show1Poster[show]}`}}
+                    style={{
+                      height: 100,
+                      width: 70,
+                      padding: 2,
+                      margin: 2
+                    }}
+                    />
+                    <Text key={show} style={styles.cardText}>{show}</Text>
+                  </View>
+                ))
+              }
+            </Card>
+          </ScrollView>
+          </View>
+      </View>
+      <View style={{
+        direction: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+      <View
+      style={{
+        padding: 5,
+        // width: '50%'
+      }}
+      >
+        <Button 
+          onPress={() => {
+            this.setState({resultsOpen: false})
+          }}
+          title="Go Back"
+          />  
+      </View>
+      <View style={{
+        padding: 5,
+        width: '80%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'space-around'
+      }}>
+        <Button
+          onPress={() => {
+            this.postSearch()
+          }}
+          title="Save Search"
+          />
+        <Button
+          onPress={() => {
+            this.getSearches()
+          }}
+          title="Previous Searches"
+          />
+      </View> 
+      </View>
+    </View>
+  )
+} else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false && this.state.adult === true) {
+  return (
+    <View style={styles.container}>
+      <Image 
+        style={styles.image}
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+    <View style={{
+      // padding: 25,
+      // margin: 10,
+      height: '80%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column'
+    }}>
+      <View style={{
+        height: 200,
+        width: 350,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        paddingTop: 8
+      }}>
+        <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // margin: 25
+        }}>
+          <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text1}
+          </Text>
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 25
+          }}
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor1Photo}`}}
+          />
+          </View>
+          <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // padding: 25,
+          paddingLeft: 60
+        }}>
+          <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text2}
+          </Text>
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 25
+          }}          
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor2Photo}`}}
+          />
+          </View>
+        </View>
+          <View style={{
+            paddingTop: 25,
+            height: '65%',
+            flex: 1}}>
+          <ScrollView style={{
+            flex: 1
+          }}>
+            <Card title="Movies" titleStyle={{color: 'white'}} containerStyle={{padding: 3, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 10}}>
+              {
+                this.state.sharedMovies.map(movie => (
+                  <View key={movie} style={styles.cardView}>
+                    <Image
+                    source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie1Poster[movie]}`}}
+                    style={{
+                      height: 100,
+                      width: 70,
+                      padding: 2,
+                      margin: 2
+                    }}
+                    />
+                    <Text key={movie} style={styles.cardText}>{movie}</Text>
+                  </View>
+                ))
+              }
+            </Card>
+          </ScrollView>
+          </View>
+      </View>
+      <View style={{
+        direction: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+      <View
+      style={{
+        padding: 5,
+        // width: '50%'
+      }}
+      >
+        <Button 
+          onPress={() => {
+            this.setState({resultsOpen: false})
+          }}
+          title="Go Back"
+          />  
+      </View>
+      <View style={{
+        padding: 5,
+        width: '80%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'space-around'
+      }}>
+        <Button
+          onPress={() => {
+            this.postSearch()
+          }}
+          title="Save Search"
+          />
+        <Button
+          onPress={() => {
+            this.getSearches()
+          }}
+          title="Previous Searches"
+          />
+      </View> 
+      </View>
+    </View>
+  )
 } else {
   return (
     <View
@@ -564,5 +999,8 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  checkBox: {
+    marginTop: 195
   }
 });

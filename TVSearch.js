@@ -151,7 +151,7 @@ export default class TVSearch extends React.Component {
         'Content-Type': 'application/json'
       }
     }
-    fetch(`${baseURL}/searches`, options)
+    fetch(`${baseURL}/showSearches`, options)
     .then(res => res.json())
     .then(response => {
       Alert.alert('', response.message)
@@ -160,7 +160,7 @@ export default class TVSearch extends React.Component {
   }
 
   getSearches() {
-    fetch(`${baseURL}/searches`)
+    fetch(`${baseURL}/showSearches`)
     .then(res => res.json())
     .then(data => {
       this.setState({

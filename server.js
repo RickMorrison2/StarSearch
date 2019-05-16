@@ -22,7 +22,23 @@ db
   });
 
 var Schema = mongoose.Schema;
-var searchSchema = new Schema({
+var actorSearchSchema = new Schema({
+  actor1: String,
+  actor2: String,
+  sharedMovies: String,
+  sharedShows: String
+})
+var SearchModel = mongoose.model('SearchModel', searchSchema);
+
+var movieSearchSchema = new Schema({
+  actor1: String,
+  actor2: String,
+  sharedMovies: String,
+  sharedShows: String
+})
+var SearchModel = mongoose.model('SearchModel', searchSchema);
+
+var showSearchSchema = new Schema({
   actor1: String,
   actor2: String,
   sharedMovies: String,
@@ -40,23 +56,79 @@ const getSearches = () => {
     })
   })
 
-  app.get('/searches', (req, res) => {
+  app.get('/movieSearches', (req, res) => {
     getSearches()
       .then(search => res.json(search))
       // .then(console.log('got searches'))
       .catch(console.log)
   });
 
-  app.post('/searches', (req, res) => {
+  app.post('/movieSearches', (req, res) => {
+    console.log('hello');
+    const movie1 = req.body.text1
+    const movie2 = req.body.text2
+    const { sharedActors } = req.body
+    let newSchema = new movieSearchModel({
+      movie1: movie1,
+      movie2: movie2,
+      sharedActors: sharedActors
+    })
+    newSchema.save()
+    .then(newSearch => {
+      res.json({
+        message: 'Search has been saved!',
+        newSearch: newSearch
+      })
+    })
+    .catch(err => console.log(err))
+      // res.sendStatus(201);
+  })
+
+  app.get('/actorSearches', (req, res) => {
+    getSearches()
+      .then(search => res.json(search))
+      // .then(console.log('got searches'))
+      .catch(console.log)
+  });
+
+  app.post('/actorSearches', (req, res) => {
     console.log('hello');
     const actor1 = req.body.text1
     const actor2 = req.body.text2
     const { sharedMovies, sharedShows } = req.body
-    let newSchema = new SearchModel({
+    let newSchema = new actorSearchModel({
       actor1: actor1,
       actor2: actor2,
       sharedMovies: sharedMovies,
       sharedShows: sharedShows
+    })
+    newSchema.save()
+    .then(newSearch => {
+      res.json({
+        message: 'Search has been saved!',
+        newSearch: newSearch
+      })
+    })
+    .catch(err => console.log(err))
+      // res.sendStatus(201);
+  })
+
+  app.get('/showSearches', (req, res) => {
+    getSearches()
+      .then(search => res.json(search))
+      // .then(console.log('got searches'))
+      .catch(console.log)
+  });
+
+  app.post('/showSearches', (req, res) => {
+    console.log('hello');
+    const show1 = req.body.text1
+    const show2 = req.body.text2
+    const { sharedActors } = req.body
+    let newSchema = new SearchModel({
+      show1: show1,
+      show2: show2,
+      sharedActors: sharedActors
     })
     newSchema.save()
     .then(newSearch => {
