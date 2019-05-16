@@ -16,8 +16,12 @@ export default class TVSearch extends React.Component {
       resultsOpen: false,
       show1ID: '',
       show2ID: '',
+      show1Poster: '',
+      show2Poster: '',
       actors1: '',
       actors2: '',
+      actors1Photos: '',
+      actors2Photos: '',
       sharedActors: [],
       previousSearches: '',
       prevSearchesOpen: false,
@@ -37,7 +41,8 @@ export default class TVSearch extends React.Component {
     .then(result => result.json())
     .then(data => {
       this.setState({
-        movie1ID: data.results[0].id
+        show1ID: data.results[0].id,
+        show1Poster: data.results[0].poster_path
       })
       return data.results[0].id
     })
@@ -55,11 +60,15 @@ export default class TVSearch extends React.Component {
     .then(data => {
       let credits = data["cast"];
       let actors = {};
+      let photos = {};
       for (let i = 0; i < credits.length; i++) {
-        actors[credits[i]['name']] = 1
+        let actor = credits[i]['name']
+        actors[actor] = 1
+        photos[actor] = credits[i]['profile_path']
       }
       this.setState({
         actors1: actors,
+        actors1Photos: photos
       }, this.searchDatabaseByName2(this.state.text2))
     })
   }
@@ -70,7 +79,8 @@ export default class TVSearch extends React.Component {
     .then(result => result.json())
     .then(data => {
       this.setState({
-        movie2ID: data.results[0].id
+        show2ID: data.results[0].id,
+        show2Poster: data.results[0].poster_path
       })
       return data.results[0].id})
     .then(id => {
@@ -87,11 +97,15 @@ export default class TVSearch extends React.Component {
     .then(data => {
       let credits = data["cast"];
       let actors = {};
+      let photos = {};
       for (let i = 0; i < credits.length; i++) {
-        actors[credits[i]['name']] = 1
+        let actor = credits[i]['name']
+        actors[actor] = 1
+        photos[actor] = credits[i]['profile_path']
       }
       this.setState({
-        actors2: actors
+        actors2: actors,
+        actors2Photos: photos
       }, () => this.compareActors())
     })
   }
@@ -99,11 +113,9 @@ export default class TVSearch extends React.Component {
   compareActors() {
     let sharedActors = [];
     if (this.state.actors1.length === 0) {
-      Alert.alert('no actors1')
+      Alert.alert('No Actors Found for Show 1')
     }
     let actors1 = Object.keys(this.state.actors1);
-    // Alert.alert('actors1', JSON.stringify(actors1))
-    // Alert.alert('actors2', JSON.stringify(this.state.actors2))
     for (let i = 0; i < actors1.length; i++) {
       let actor = actors1[i];
       if (this.state.actors2[actor]) {
@@ -122,7 +134,6 @@ export default class TVSearch extends React.Component {
       }, () => this.setState({
         resultsOpen: true
       }))
-      // }) () => Alert.alert('actor comparison', JSON.stringify(this.state)))
     }
   }
 
@@ -166,19 +177,14 @@ export default class TVSearch extends React.Component {
     // this.searchDatabaseByName2(this.state.text2)
   }
 
-  handleAdultCheck() {
-    this.setState({
-      adult: !this.state.adult
-    })
-  }
-
   render() {
     if (this.state.resultsOpen === false) {
     return (
       <View style={styles.container}>
       <Image 
         style={styles.image}
-        source={require('./assets/Starsinthesky.jpg')} />
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
         <Text style={{
           fontSize: 30, 
           color: 'white',
@@ -195,16 +201,27 @@ export default class TVSearch extends React.Component {
         fontSize: 22,
         color: 'white'
       }}>Select your search type:</Text>
+      <View style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        width: 200,
+        justifyContent: 'center',
+        borderColor: 'rgb(255, 255, 255)',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 5,
+        margin: 5
+      }}>
         <RadioForm
           radio_props={[
             {label: 'Movies', value: 1},
             {label: 'Actors', value: 2},
             {label: 'TV Shows', value: 3}
           ]}
-          initial={0}
+          initial={2}
           onPress={(value) => this.props.handleSearchTypeChange(value)}
           style={{color: 'white', fontSize: '24'}}
         />
+      </View>
         <TextInput
           style={styles.input}
           placeholder="Show 1"
@@ -222,13 +239,6 @@ export default class TVSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
-        <CheckBox
-          center
-          checkedIcon='dot-circle-o'
-          uncheckedIcon='circle-o'
-          title="Allow adult content"
-          checked={this.state.adult}
-        />
         </View>
       </View>
   );
@@ -237,32 +247,95 @@ export default class TVSearch extends React.Component {
     <View style={styles.container}>
       <Image 
         style={styles.image}
-        source={require('./assets/Starsinthesky.jpg')} />
-    <View style={{
-      padding: 25,
-      margin: 10,
-      height: '82%'
-    }}>
-      <Text style={{
-        fontSize: 24,
-        color: 'white',
-        padding: 5,
-        display: 'flex',
-        // flexDirection: 'column',
+        // source={require('./assets/Starsinthesky.jpg')} />
+        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+      <View style={{
+        // padding: 25,
+        // margin: 10,
+        height: '80%',
         justifyContent: 'center',
-        alignContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        shadowColor: 'black'
-      }}>{`These actors have been in both ${this.state.text1} and ${this.state.text2}: `}  
-          </Text>
-          <View style={{height: '78%'}}>
-          <ScrollView>
-            <Card containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+        flexDirection: 'column'
+      }}>
+          <View style={{
+          height: 200,
+          width: 350,
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}>
+        <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // padding: 25,
+          // margin: 25
+        }}>
+          {/* <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text1}
+          </Text> */}
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 25
+          }}
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.show1Poster}`}}
+          />
+          </View>
+          <View style={{
+          direction: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          // padding: 25,
+          paddingLeft: 60
+        }}>
+          {/* <Text style={{
+            fontSize: 20,
+            color: 'white'
+          }}>
+            {this.state.text2}
+          </Text> */}
+          <Image
+          style={{
+            height: 200,
+            width: 140,
+            justifyContent: 'center'
+            // padding: 10,
+            // margin: 50
+          }}          
+          source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.show2Poster}`}}
+          />
+        </View>
+        </View>
+          <View style={{
+            height: '65%',
+            paddingTop: 25,
+            flex: 1
+            }}>
+          <ScrollView style={{
+            flex: 1
+          }}>
+            <Card containerStyle={{padding: 3, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 10}}>
               {
                 this.state.sharedActors.map(actor => (
-                  <View key={actor} style={styles.card}>
-                    <Text key={actor}>{actor}</Text>
+                  <View key={actor} style={styles.cardView}>
+                  <Image
+                    source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actors1Photos[actor]}`}}
+                    style={{
+                      height: 100,
+                      width: 70,
+                      padding: 2,
+                      margin: 2
+                    }}
+                    />
+                    <Text key={actor} style={styles.cardText}>{actor}</Text>
                   </View>
                 ))
               }
@@ -270,6 +343,11 @@ export default class TVSearch extends React.Component {
           </ScrollView>
           </View>
       </View>
+      <View style={{
+        direction: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
       <View
       style={{
         padding: 5,
@@ -284,6 +362,10 @@ export default class TVSearch extends React.Component {
       </View>
       <View style={{
         padding: 5,
+        width: '80%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'space-around'
       }}>
         <Button
           onPress={() => {
@@ -291,18 +373,14 @@ export default class TVSearch extends React.Component {
           }}
           title="Save Search"
           />
-      </View>
-      <View
-      style={{
-        padding: 5,
-      }}>
         <Button
           onPress={() => {
             this.getSearches()
           }}
           title="Previous Searches"
           />
-      </View> 
+      </View>
+      </View>
     </View>
   )
 } else {
@@ -312,12 +390,13 @@ export default class TVSearch extends React.Component {
     >
     <Image 
     style={styles.image}
-    source={require('./assets/Starsinthesky.jpg')} />
+    // source={require('./assets/Starsinthesky.jpg')} />
+    source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
     <View
     style={{
       display: 'flex',
       justifyContent: 'center',
-      alignContent: 'center',
+      alignItems: 'center',
       padding: 5,
     }}
     >
@@ -325,8 +404,8 @@ export default class TVSearch extends React.Component {
         <Card title="Previous Searches">
           {
             this.state.previousSearches.map(search => {
-              <View key={search} style={styles.card} >
-                <Text key={search}>{search}</Text>
+              <View key={search} style={styles.cardView} >
+                <Text key={search} style={styles.cardText}>{search}</Text>
               </View>
             })
           }
@@ -348,10 +427,11 @@ export default class TVSearch extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
   },
   image: {
     flex: 1,
@@ -370,13 +450,24 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: 'rgba(255, 255, 255, 0.7)'
   },
-  card: {
-    fontSize: 24,
-    borderColor: 'gray', 
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    margin: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)'
+  cardView: {
+    // padding: 10,
+    // margin: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    alignItems: 'center'
+  },
+  cardText: {
+    width: '70%',
+    fontSize: 20,
+    color: 'black',
+    // padding: 10,
+    margin: 10,
+    // flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

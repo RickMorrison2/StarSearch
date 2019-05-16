@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import { Card, ListItem, Icon } from 'react-native-elements'
+import { Card, ListItem, Icon, CheckBox } from 'react-native-elements'
 
 // const console = require('console');
 
@@ -23,9 +23,9 @@ export default class MovieSearch extends React.Component {
       actors1Photos: '',
       actors2Photos: '',
       sharedActors: [],
-      sharedActorPhotos: [],
       previousSearches: '',
-      prevSearchesOpen: false
+      prevSearchesOpen: false,
+      adult: false
     }
     this.getActorsMovie1 = this.getActorsMovie1.bind(this)
     this.getActorsMovie2 = this.getActorsMovie2.bind(this)
@@ -37,7 +37,7 @@ export default class MovieSearch extends React.Component {
 
   searchDatabaseByName1(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
     .then(result => result.json())
     .then(data => {
       this.setState({
@@ -75,7 +75,7 @@ export default class MovieSearch extends React.Component {
 
   searchDatabaseByName2(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
+    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
     .then(result => result.json())
     .then(data => {
       this.setState({
@@ -112,18 +112,14 @@ export default class MovieSearch extends React.Component {
     
   compareActors() {
     let sharedActors = [];
-    // let sharedActorPhotos = [];
     if (this.state.actors1.length === 0) {
       Alert.alert('no actors1')
     }
     let actors1 = Object.keys(this.state.actors1);
-    // Alert.alert('actors1', JSON.stringify(actors1))
-    // Alert.alert('actors2', JSON.stringify(this.state.actors2))
     for (let i = 0; i < actors1.length; i++) {
       let actor = actors1[i];
       if (this.state.actors2[actor]) {
         sharedActors.push(actor);
-        // sharedActorPhotos.push(this.state.actor1Photos[actor])
       }
     }
     if (sharedActors.length === 0) {
@@ -135,11 +131,9 @@ export default class MovieSearch extends React.Component {
     } else {
       this.setState({
         sharedActors: sharedActors,
-        // sharedActorPhotos: sharedActorPhotos
       }, () => this.setState({
         resultsOpen: true
-      }, () => Alert.alert('actor 1 photos', JSON.stringify(this.state.actors1Photos))))
-      // }) () => Alert.alert('actor comparison', JSON.stringify(this.state)))
+      }))
     }
   }
 
@@ -183,6 +177,12 @@ export default class MovieSearch extends React.Component {
     // this.searchDatabaseByName2(this.state.text2)
   }
 
+  handleAdultCheck() {
+    this.setState({
+      adult: !this.state.adult
+    })
+  }
+
   render() {
     if (this.state.resultsOpen === false) {
     return (
@@ -207,6 +207,16 @@ export default class MovieSearch extends React.Component {
         fontSize: 22,
         color: 'white'
       }}>Select your search type:</Text>
+      <View style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        width: 200,
+        justifyContent: 'center',
+        borderColor: 'rgb(255, 255, 255)',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 5,
+        margin: 5
+      }}>
         <RadioForm
           radio_props={[
             {label: 'Movies', value: 1},
@@ -217,6 +227,7 @@ export default class MovieSearch extends React.Component {
           onPress={(value) => this.props.handleSearchTypeChange(value)}
           style={{color: 'white', fontSize: '24'}}
         />
+      </View>
         <TextInput
           style={styles.input}
           placeholder="Movie 1"
@@ -234,6 +245,14 @@ export default class MovieSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
+        <CheckBox
+          center
+          // checkedIcon='dot-circle-o'
+          // uncheckedIcon='circle-o'
+          title="Allow adult content"
+          checked={this.state.adult}
+          onPress={() => this.handleAdultCheck()}
+        />
         </View>
       </View>
   );
@@ -245,60 +264,66 @@ export default class MovieSearch extends React.Component {
         // source={require('./assets/Starsinthesky.jpg')} />
         source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
     <View style={{
-      padding: 25,
-      margin: 10,
-      height: '82%'
+      // padding: 25,
+      // margin: 10,
+      height: '80%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column'
     }}>
-      <Text style={{
+      {/* <Text style={{
         fontSize: 24,
         color: 'white',
         padding: 5,
         display: 'flex',
         // flexDirection: 'column',
         justifyContent: 'center',
-        alignContent: 'center',
+        alignItems: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.4)',
         shadowColor: 'black'
       }}>{`These actors have been in both ${this.state.text1} and ${this.state.text2}: `}  
-          </Text>
+          </Text> */}
         <View style={{
           height: 200,
-          width: 300,
+          width: 350,
           display: 'flex',
-          // justifyContent: 'space-between',
-          // alignContent: 'space-between',
-          flexWrap: 'wrap'
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          flexDirection: 'row'
         }}>
           <Image
           style={{
             height: 200,
-            width: 120,
-            padding: 10,
-            margin: 25
+            width: 140,
+            // padding: 10,
+            // margin: 25
           }}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie1Poster}`}}
           />
           <Image
           style={{
             height: 200,
-            width: 120,
-            padding: 10,
-            margin: 25
+            width: 140,
+            // padding: 10,
+            // margin: 25
           }}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie2Poster}`}}
           />
         </View>
           <View style={{
-            height: '78%',
-            padding: 10,
-            margin: 10
+            height: '65%',
+            paddingTop: 25,
+            flex: 1
             }}>
-          <ScrollView>
-            <Card containerStyle={{padding: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)'}}>
+          <ScrollView style={{
+            flex: 1
+          }}>
+            <Card containerStyle={{padding: 3, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 10}}>
               {
                 this.state.sharedActors.map(actor => (
-                  <View key={actor} style={styles.card}>
+                  <View key={actor} style={styles.cardView}>
                     <Image
                     source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actors1Photos[actor]}`}}
                     style={{
@@ -306,7 +331,7 @@ export default class MovieSearch extends React.Component {
                       width: 60
                     }}
                     />
-                    <Text key={actor}>{actor}</Text>
+                    <Text key={actor} style={styles.cardText}>{actor}</Text>
                   </View>
                 ))
               }
@@ -328,6 +353,10 @@ export default class MovieSearch extends React.Component {
       </View>
       <View style={{
         padding: 5,
+        width: '80%',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'space-around'
       }}>
         <Button
           onPress={() => {
@@ -335,11 +364,6 @@ export default class MovieSearch extends React.Component {
           }}
           title="Save Search"
           />
-      </View>
-      <View
-      style={{
-        padding: 5,
-      }}>
         <Button
           onPress={() => {
             this.getSearches()
@@ -362,7 +386,7 @@ export default class MovieSearch extends React.Component {
     style={{
       display: 'flex',
       justifyContent: 'center',
-      alignContent: 'center',
+      alignItems: 'center',
       padding: 5,
     }}
     >
@@ -370,8 +394,8 @@ export default class MovieSearch extends React.Component {
         <Card title="Previous Searches">
           {
             this.state.previousSearches.map(search => {
-              <View key={search} style={styles.card} >
-                <Text key={search}>{search}</Text>
+              <View key={search} style={styles.cardView} >
+                <Text key={search} style={styles.cardText}>{search}</Text>
               </View>
             })
           }
@@ -393,10 +417,11 @@ export default class MovieSearch extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column'
   },
   image: {
     flex: 1,
@@ -415,13 +440,24 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: 'rgba(255, 255, 255, 0.7)'
   },
-  card: {
-    fontSize: 24,
-    borderColor: 'gray', 
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    margin: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.7)'
+  cardView: {
+    // padding: 10,
+    // margin: 5,
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    flexDirection: 'row',
+    // justifyContent: 'center',
+    alignItems: 'center'
+  },
+  cardText: {
+    width: '70%',
+    fontSize: 20,
+    color: 'black',
+    // padding: 10,
+    margin: 10,
+    // flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

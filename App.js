@@ -54,16 +54,27 @@ export default class App extends React.Component {
         fontSize: 22,
         color: 'white'
       }}>Select your search type:</Text>
+      <View style={{
+        backgroundColor: 'rgba(255, 255, 255, 0.7)',
+        width: 200,
+        justifyContent: 'center',
+        borderColor: 'rgb(255, 255, 255)',
+        borderWidth: 1,
+        borderRadius: 5,
+        padding: 5,
+        margin: 5
+      }}>
       <RadioForm
         radio_props={[
           {label: 'Movies', value: 1},
           {label: 'Actors', value: 2},
           {label: 'TV Shows', value: 3}
         ]}
-        initial={0}
+        // initial={0}
         onPress={(value) => {this.setState({searchType: value})}}
         style={{color: 'white', fontSize: '24'}}
        />
+       </View>
     </View>
     )
   } else if (this.state.searchType === 1) {
