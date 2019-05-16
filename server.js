@@ -28,6 +28,7 @@ var SearchSchema = new Schema({
   sharedMovies: String,
   sharedShows: String
 })
+var SearchModel = mongoose.model('SearchModel', SearchSchema)
 
 var actorSearchSchema = new Schema({
   actor1: String,
