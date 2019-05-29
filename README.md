@@ -3,12 +3,12 @@ Mobile application for iOS and Android, allowing users to find movies and shows 
 
 ## Mobile Screenshots
 <div>
-<img src="https://i.imgur.com/wFdaKpi.jpg" width="150" height="450" />
-<img src="https://i.imgur.com/bHFNVBB.jpg" width="150" height="450" />
+<img src="https://i.imgur.com/wFdaKpi.jpg" width="250" height="450" />
+<img src="https://i.imgur.com/bHFNVBB.jpg" width="250" height="450" />
   </div>
   <div>
-<img src="https://i.imgur.com/ozFBcUX.jpg" width="150" height="450" />
-<img src="https://i.imgur.com/aqqd9Df.jpg" width="150" height="450" />
+<img src="https://i.imgur.com/ozFBcUX.jpg" width="250" height="450" />
+<img src="https://i.imgur.com/aqqd9Df.jpg" width="250" height="450" />
 </div>
 
 
