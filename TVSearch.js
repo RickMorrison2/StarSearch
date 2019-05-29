@@ -184,7 +184,14 @@ export default class TVSearch extends React.Component {
       <Image 
         style={styles.image}
         // source={require('./assets/Starsinthesky.jpg')} />
-        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+        source={require('./assets/FilmReel.jpg')} />
+        <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          // marginTop: 170,
+          marginBottom: 200
+        }}>
         <Text style={{
           fontSize: 30, 
           color: 'white',
@@ -239,6 +246,7 @@ export default class TVSearch extends React.Component {
           onPress={this.handleSearch}
           title="Search"
           />
+          </View>
         </View>
       </View>
   );
@@ -248,7 +256,7 @@ export default class TVSearch extends React.Component {
       <Image 
         style={styles.image}
         // source={require('./assets/Starsinthesky.jpg')} />
-        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+        source={require('./assets/FilmReel.jpg')} />
       <View style={{
         // padding: 25,
         // margin: 10,
@@ -360,7 +368,7 @@ export default class TVSearch extends React.Component {
           title="Go Back"
           />  
       </View>
-      <View style={{
+      {/* <View style={{
         padding: 5,
         width: '80%',
         flexDirection: 'row',
@@ -379,7 +387,7 @@ export default class TVSearch extends React.Component {
           }}
           title="Previous Searches"
           />
-      </View>
+      </View> */}
       </View>
     </View>
   )
@@ -391,7 +399,7 @@ export default class TVSearch extends React.Component {
     <Image 
     style={styles.image}
     // source={require('./assets/Starsinthesky.jpg')} />
-    source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+    source={require('./assets/FilmReel.jpg')} />
     <View
     style={{
       display: 'flex',

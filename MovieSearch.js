@@ -124,7 +124,7 @@ export default class MovieSearch extends React.Component {
     }
     if (sharedActors.length === 0) {
       this.setState({
-        sharedActors: ['none']
+        sharedActors: ['No actors have been in these two movies']
       }, () => this.setState({
         resultsOpen: true
       }))
@@ -142,10 +142,29 @@ export default class MovieSearch extends React.Component {
     const body = {
       text1: this.state.text1,
       text2: this.state.text2,
-      sharedActors: this.state.shareActors
+      sharedActors: this.state.sharedActors
     }
     const options = {
       method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    fetch(`${baseURL}/movieSearches`, options)
+    .then(res => res.json())
+    .then(response => {
+      Alert.alert('', response.message)
+    })
+    .catch((err) => Alert.alert('', err.message))
+  }
+
+  deleteSearch(id) {
+    const body = {
+      id: id
+    }
+    const options = {
+      method: 'DELETE',
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json'
@@ -165,11 +184,10 @@ export default class MovieSearch extends React.Component {
     .then(data => {
       this.setState({
         previousSearches: data
-      })
+      }, () => this.setState({
+        prevSearchesOpen: true
+      }))
     })
-    .then(this.setState({
-      prevSearchesOpen: true
-    }))
   }
 
   handleSearch() {
@@ -177,11 +195,6 @@ export default class MovieSearch extends React.Component {
     // this.searchDatabaseByName2(this.state.text2)
   }
 
-  handleAdultCheck() {
-    this.setState({
-      adult: !this.state.adult
-    })
-  }
 
   render() {
     if (this.state.resultsOpen === false) {
@@ -189,13 +202,13 @@ export default class MovieSearch extends React.Component {
       <View style={styles.container}>
       <Image 
         style={styles.image}
-        // source={require('./assets/Starsinthesky.jpg')} />
-        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+        source={require('./assets/FilmReel.jpg')} />
         <View style={{
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop: 170
+          // marginTop: 170,
+          marginBottom: 200
         }}>
         <Text style={{
           fontSize: 30, 
@@ -253,16 +266,6 @@ export default class MovieSearch extends React.Component {
           />
       </View>
       </View>
-      <View style={styles.checkBox}>
-        <CheckBox
-          center
-          // checkedIcon='dot-circle-o'
-          // uncheckedIcon='circle-o'
-          title="Allow adult content"
-          checked={this.state.adult}
-          onPress={() => this.handleAdultCheck()}
-        />
-      </View>
       </View>
   );
 } else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false) {
@@ -270,11 +273,8 @@ export default class MovieSearch extends React.Component {
     <View style={styles.container}>
       <Image 
         style={styles.image}
-        // source={require('./assets/Starsinthesky.jpg')} />
-        source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+        source={require('./assets/FilmReel.jpg')} />
     <View style={{
-      // padding: 25,
-      // margin: 10,
       height: '80%',
       justifyContent: 'center',
       alignItems: 'center',
@@ -291,14 +291,14 @@ export default class MovieSearch extends React.Component {
         }}>
           <Image
           style={{
-            height: 200,
+            height: 220,
             width: 140
           }}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie1Poster}`}}
           />
           <Image
           style={{
-            height: 200,
+            height: 220,
             width: 140
           }}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie2Poster}`}}
@@ -320,7 +320,9 @@ export default class MovieSearch extends React.Component {
                     source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actors1Photos[actor]}`}}
                     style={{
                       height: 100,
-                      width: 60
+                      width: 70,
+                      padding: 2,
+                      margin: 2
                     }}
                     />
                     <Text key={actor} style={styles.cardText}>{actor}</Text>
@@ -343,7 +345,7 @@ export default class MovieSearch extends React.Component {
           title="Go Back"
           />  
       </View>
-      <View style={{
+      {/* <View style={{
         padding: 5,
         width: '80%',
         flexDirection: 'row',
@@ -362,7 +364,7 @@ export default class MovieSearch extends React.Component {
           }}
           title="Previous Searches"
           />
-      </View> 
+      </View>  */}
     </View>
   )
 } else {
@@ -372,8 +374,7 @@ export default class MovieSearch extends React.Component {
     >
     <Image 
     style={styles.image}
-    // source={require('./assets/Starsinthesky.jpg')} />
-    source={{uri: 'https://ak.picdn.net/shutterstock/videos/1581349/thumb/1.jpg'}} />
+    source={require('./assets/FilmReel.jpg')} />
     <View
     style={{
       display: 'flex',
@@ -382,16 +383,27 @@ export default class MovieSearch extends React.Component {
       padding: 5,
     }}
     >
-      <View>
-        <Card title="Previous Searches">
+      <View style={{
+        flex: 1,
+        paddingTop: 25,
+        height: '75%'
+      }}>
+        <ScrollView>
+        <Card title="Previous Searches" titleStyle={{color: 'white'}} containerStyle={{padding: 10, paddingBottom: 5, backgroundColor: 'rgba(0, 0, 0, 0.4)', borderRadius: 10}}>
           {
             this.state.previousSearches.map(search => {
-              <View key={search} style={styles.cardView} >
-                <Text key={search} style={styles.cardText}>{search}</Text>
-              </View>
-            })
-          }
+                return (<View key={search._id} style={styles.cardView} >
+                  <Text key={search._id} style={styles.cardText}>{JSON.stringify(search)}</Text>
+                  <Button
+                    onPress={() => this.deleteSearch(search._id)}
+                    title="X"
+                    />
+                  {/* <Text>testing</Text> */}
+                </View>)
+              })
+            }
         </Card>
+        </ScrollView>
       </View>
       <Button 
         onPress={() => {
@@ -446,10 +458,5 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  checkBox: {
-    // flex: 1,
-    // justifyContent: 'flex-end',
-    marginTop: 180
   }
 });

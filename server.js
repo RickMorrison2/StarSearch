@@ -56,6 +56,22 @@ const getSearches = () => {
   return SearchModel.find({}).exec();
 };
 
+const getMovieSearches = () => {
+  return MovieSearchModel.find({}).exec();
+};
+
+const deleteMovieSearch = (_id) => {
+  return MovieSearchModel.deleteOne({_id: _id}).exec();
+}
+
+const getActorSearches = () => {
+  return ActorSearchModel.find({}).exec();
+};
+
+const getShowSearches = () => {
+  return ShowSearchModel.find({}).exec();
+};
+
   app.get('/', (req, res) => {
     res.json({
       message: "server running"
@@ -63,14 +79,12 @@ const getSearches = () => {
   })
 
   app.get('/movieSearches', (req, res) => {
-    getSearches()
+    getMovieSearches()
       .then(search => res.json(search))
-      // .then(console.log('got searches'))
       .catch(console.log)
   });
 
   app.post('/movieSearches', (req, res) => {
-    console.log('hello');
     const movie1 = req.body.text1
     const movie2 = req.body.text2
     const { sharedActors } = req.body
@@ -87,13 +101,18 @@ const getSearches = () => {
       })
     })
     .catch(err => console.log(err))
-      // res.sendStatus(201);
+  })
+
+  app.delete('/movieSearches/:_id', (req, res) => {
+    const { _id } = req.params
+    deleteMovieSearch(_id)
+    .then(res => res.json())
+    .catch(console.log)
   })
 
   app.get('/actorSearches', (req, res) => {
-    getSearches()
+    getActorSearches()
       .then(search => res.json(search))
-      // .then(console.log('got searches'))
       .catch(console.log)
   });
 
@@ -120,7 +139,7 @@ const getSearches = () => {
   })
 
   app.get('/showSearches', (req, res) => {
-    getSearches()
+    getShowSearches()
       .then(search => res.json(search))
       // .then(console.log('got searches'))
       .catch(console.log)
