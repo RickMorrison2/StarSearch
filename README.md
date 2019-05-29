@@ -2,11 +2,10 @@
 Mobile application for iOS and Android, allowing users to find movies and shows with common actors. Simply enter the names of two movies or TV shows to retrieve a list of all the actors who were in both, or enter two actors to return all movies and shows they've been in together.
 
 ## Mobile Screenshots
-<img src="https://i.imgur.com/wFdaKpi.jpg" width="100" height="250" />
-![Main Search Page Screenshot](https://i.imgur.com/wFdaKpi.jpg)
-![Movie Search Screenshot](https://i.imgur.com/bHFNVBB.jpg)
-![Actor Search Screenshot](https://i.imgur.com/ozFBcUX.jpg)
-![Show Search Screenshot](https://i.imgur.com/aqqd9Df.jpg)
+<img src="https://i.imgur.com/wFdaKpi.jpg" width="150" height="350" />
+<img src="https://i.imgur.com/bHFNVBB.jpg" width="150" height="350" />
+<img src="https://i.imgur.com/ozFBcUX.jpg" width="150" height="350" />
+<img src="https://i.imgur.com/aqqd9Df.jpg" width="150" />
 
 
 ## Technologies Used
