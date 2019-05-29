@@ -352,13 +352,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text1}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}
+          style={styles.actorImage}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor1Photo}`}}
           />
           </View>
@@ -376,13 +370,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text2}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}          
+          style={styles.actorImage}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor2Photo}`}}
           />
           </View>
@@ -494,13 +482,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text1}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}
+          style={styles.actorImage}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor1Photo}`}}
           />
           </View>
@@ -518,13 +500,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text2}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}          
+          style={styles.actorImage}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor2Photo}`}}
           />
           </View>
@@ -654,13 +630,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text1}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}
+          style={styles.actorImage}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor1Photo}`}}
           />
           </View>
@@ -678,13 +648,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text2}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}          
+          style={styles.actorImage}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor2Photo}`}}
           />
           </View>
@@ -796,13 +760,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text1}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}
+          style={styles.actorImage}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor1Photo}`}}
           />
           </View>
@@ -820,13 +778,7 @@ export default class ActorSearch extends React.Component {
             {this.state.text2}
           </Text>
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}          
+          style={styles.actorImage}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.actor2Photo}`}}
           />
           </View>
@@ -978,5 +930,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  actorImage: {
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center'
+    // padding: 10,
+    // margin: 25
   }
 });

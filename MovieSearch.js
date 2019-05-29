@@ -290,17 +290,11 @@ export default class MovieSearch extends React.Component {
           flexDirection: 'row'
         }}>
           <Image
-          style={{
-            height: 220,
-            width: 140
-          }}
+          style={styles.moviePoster}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie1Poster}`}}
           />
           <Image
-          style={{
-            height: 220,
-            width: 140
-          }}          
+          style={styles.moviePoster}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.movie2Poster}`}}
           />
         </View>
@@ -458,5 +452,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  moviePoster: {
+    height: '100%',
+    width: '37.5%',
+    justifyContent: 'center'
+    // padding: 10,
+    // margin: 25
   }
 });

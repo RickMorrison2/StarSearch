@@ -272,55 +272,16 @@ export default class TVSearch extends React.Component {
           justifyContent: 'space-around',
           alignItems: 'center',
           flexWrap: 'wrap',
+          flexDirection: 'row'
         }}>
-        <View style={{
-          direction: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          // padding: 25,
-          // margin: 25
-        }}>
-          {/* <Text style={{
-            fontSize: 20,
-            color: 'white'
-          }}>
-            {this.state.text1}
-          </Text> */}
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 25
-          }}
+          style={styles.showPoster}
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.show1Poster}`}}
           />
-          </View>
-          <View style={{
-          direction: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          // padding: 25,
-          paddingLeft: 60
-        }}>
-          {/* <Text style={{
-            fontSize: 20,
-            color: 'white'
-          }}>
-            {this.state.text2}
-          </Text> */}
           <Image
-          style={{
-            height: 200,
-            width: 140,
-            justifyContent: 'center'
-            // padding: 10,
-            // margin: 50
-          }}          
+          style={styles.showPoster}          
           source={{uri: `https://image.tmdb.org/t/p/w1280${this.state.show2Poster}`}}
           />
-        </View>
         </View>
           <View style={{
             height: '65%',
@@ -477,5 +438,12 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  showPoster: {
+    height: '100%',
+    width: '37.5%',
+    justifyContent: 'center'
+    // padding: 10,
+    // margin: 25
   }
 });
