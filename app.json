@@ -28,7 +28,7 @@
     },
     "android": {
       "package": "com.RickMorrison.StarSearch",
-      "versionCode": 2
+      "versionCode": 3
     }
   }
 }

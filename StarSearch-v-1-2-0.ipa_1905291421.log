@@ -1,0 +1,79 @@
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Logging to file: C:\Users\pepsi\Desktop\HRGalvanizeExercises\MVP\StarSearch\BMDB\StarSearch-v-1-2-0.ipa_1905291421.log
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Logging configured successfully.
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: iTMSTransporter : iTunes Store Transporter [1.9.8]
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: OS identifier: Windows 10 10.0 (amd64); jvm=25.171-b11; jre=1.8.0_171-b11
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Memory: [JVM] 71M free, 155M total, 3625M max [System] (Physical) 4645M free, 16308M total (Swap) 12690M free, 31156M total
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Upload mode selected.
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Examining the package at: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Ensuring that package has well formed metadata file...
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Gathering the list of valid files from the package ...
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Finished gathering the list of valid files from the package.
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Verify progress: Analyzing metadata (Step 3/?)
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Performing authentication of package 1465851931.itmsp ...
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: Verify progress: Analyzing metadata (Step 4/2)
+[2019-05-29 14:21:18 MDT] <Thread-23>  INFO: id = 20190529142118-706
+[2019-05-29 14:21:19 MDT] <Thread-23>  INFO: id = 20190529142119-395
+[2019-05-29 14:21:25 MDT] <Thread-23>  INFO: The list of files requested for upload by Apple is: [metadata.xml, 1465851931.ipa].  These are the files that will be uploaded.
+[2019-05-29 14:21:25 MDT] <Thread-23>  INFO: Starting media analysis of assets
+[2019-05-29 14:21:25 MDT] <Thread-23>  INFO: Verify progress: Adding asset to analyze: 1465851931.ipa (Step 5/3)
+[2019-05-29 14:21:25 MDT] <Thread-23>  INFO: Asset media analysis has completed
+[2019-05-29 14:21:25 MDT] <Thread-23>  INFO: id = 20190529142125-292
+[2019-05-29 14:21:45 MDT] <Thread-23>  INFO: Verify progress: Validating assets (Step 6/3)
+[2019-05-29 14:21:45 MDT] <Thread-23>  INFO: Verify progress: Validating assets (Step 7/3)
+[2019-05-29 14:21:45 MDT] <Thread-23>  INFO: id = 20190529142145-113
+[2019-05-29 14:22:16 MDT] <Thread-23>  INFO: The list of files requested for upload by Apple is: [metadata.xml, 1465851931.ipa].  These are the files that will be uploaded.
+[2019-05-29 14:22:16 MDT] <Thread-23>  INFO: Done performing authentication.
+[2019-05-29 14:22:16 MDT] <Thread-23>  INFO: The asset replacement verification check is disabled.
+[2019-05-29 14:22:16 MDT] <Thread-23>  INFO: Checking the file size of the files: [1465851931.ipa]
+[2019-05-29 14:22:16 MDT] <Thread-23>  INFO: Done checking the file sizes.
+[2019-05-29 14:22:16 MDT] <Thread-23>  INFO: Checking the md5 checksum of the files: [1465851931.ipa]
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Done checking the md5 checksum.
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Preparing to upload package 1465851931.itmsp ...
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Starting to upload the package's files (1465851931.itmsp) ...
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Attempting to connect to Apple's webDAV...
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Successfully connected to Apple's webDAV.
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Attempting to create the package's folder on Apple's webDAV: /5/96A9DA5S56/uploading/1465851931-20190529132153-636.itmsp/
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Successfully created/set the package's folder on Apple's webDAV.
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Determining which files should be uploaded ...
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Finished determining which files should be uploaded.
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Computing total size of files to upload ...
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Done computing total size of files to upload.
+[2019-05-29 14:22:17 MDT] <Thread-23>  INFO: Starting upload of file: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp\1465851931.ipa ...
+[2019-05-29 14:22:37 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 10485760/102834901, 10% completed
+[2019-05-29 14:23:00 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 20971520/102834901, 20% completed
+[2019-05-29 14:23:30 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 31457280/102834901, 30% completed
+[2019-05-29 14:23:51 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 41943040/102834901, 40% completed
+[2019-05-29 14:24:30 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 52428800/102834901, 50% completed
+[2019-05-29 14:25:12 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 62914560/102834901, 61% completed
+[2019-05-29 14:26:14 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 73400320/102834901, 71% completed
+[2019-05-29 14:26:57 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 83886080/102834901, 81% completed
+[2019-05-29 14:27:31 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 94371840/102834901, 91% completed
+[2019-05-29 14:28:06 MDT] <Thread-23>  INFO:      File: 1465851931.ipa 102834901/102834901, 100% completed
+[2019-05-29 14:28:06 MDT] <Thread-23>  INFO:   Successfully uploaded file: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp\1465851931.ipa
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Package upload progress: 99% completed
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Finished upload of file: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp\1465851931.ipa.
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Starting upload of file: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp\metadata.xml ...
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO:      File: metadata.xml 534/534, 100% completed
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO:   Successfully uploaded file: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp\metadata.xml
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Package upload progress: 100% completed
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Finished upload of file: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp\metadata.xml.
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Gathering list of uploaded files from Apple's webDAV...
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Done gathering list of uploaded files from Apple's webDAV...
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Checking if any encryption/compression files are outdated locally ...
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Finished checking if any encryption/compression files are outdated locally.
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Confirming that the previously uploaded files were uploaded correctly ...
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Finished confirming that the previously uploaded files were uploaded correctly.
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Determining which files were not uploaded ...
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Finished determining which files were not uploaded.
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: Done performing upload.
+[2019-05-29 14:28:07 MDT] <Thread-23>  INFO: id = 20190529142807-465
+[2019-05-29 14:28:10 MDT] <Thread-23>  INFO: Done performing uploadDone notification to Apple.
+[2019-05-29 14:28:10 MDT] <Thread-23>  INFO: The package: C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp has been successfully uploaded.
+[2019-05-29 14:28:10 MDT] <Thread-23>  INFO: Verify progress: Operation completed (Step 3/3)
+
+
+
+Package Summary:
+ 
+1 packages were uploaded successfully:
+	C:\Users\pepsi\AppData\Local\Temp\au\itmsp\1465851931.itmsp

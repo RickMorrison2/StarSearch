@@ -17,6 +17,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
     "react-native-elements": "^1.1.0",
     "react-native-simple-radio-button": "^2.7.3",
+    "xcode": "^2.0.0",
     "yarn": "^1.15.2"
   },
   "devDependencies": {

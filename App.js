@@ -13,7 +13,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchType: 1
+      searchType: 0
     }
     this.handleSearchTypeChange = this.handleSearchTypeChange.bind(this)
   }
@@ -49,11 +49,23 @@ export default class App extends React.Component {
           borderWidth: 1,
           borderRadius: 5,
           backgroundColor: 'rgba(0,0,0,0.5)'
-          }}>Star Search</Text>
+          }}>Welcome to Star Search! </Text>
+          <Text style={{
+            fontSize: 20,
+            color: 'white',
+            padding: 5,
+            borderColor: 'gray',
+            borderWidth: 1,
+            borderRadius: 5,
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            justifyContent: 'center'
+          }}>Search by movies or shows to find a list of actors who have been in both, or search by actors
+          to return all movies and shows they've been in together!
+        </Text> 
       <Text style={{
-        fontSize: 22,
+        fontSize: 18,
         color: 'white'
-      }}>Select your search type:</Text>
+      }}>Select your search type to get started:</Text>
       <View style={{
         backgroundColor: 'rgba(255, 255, 255, 0.7)',
         width: 200,

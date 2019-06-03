@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView} from 'react-native';
+import { StyleSheet, Text, TextInput, View, Button, Alert, Image, ScrollView, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import { Card, ListItem, Icon, CheckBox } from 'react-native-elements'
 
@@ -25,7 +25,7 @@ export default class TVSearch extends React.Component {
       sharedActors: [],
       previousSearches: '',
       prevSearchesOpen: false,
-      adult: false
+      searching: 'Search'
     }
     this.getActorsShow1 = this.getActorsShow1.bind(this)
     this.getActorsShow2 = this.getActorsShow2.bind(this)
@@ -37,7 +37,7 @@ export default class TVSearch extends React.Component {
 
   searchDatabaseByName1(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/tv?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
+    fetch(`https://api.themoviedb.org/3/search/tv?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
     .then(result => result.json())
     .then(data => {
       this.setState({
@@ -50,6 +50,7 @@ export default class TVSearch extends React.Component {
       this.getActorsShow1(id)
       return id;
     })
+    .catch(err => Alert.alert('Oops...', 'Could not find Show 1. Did you spell the name correctly?'))
   }
 
     
@@ -75,7 +76,7 @@ export default class TVSearch extends React.Component {
 
   searchDatabaseByName2(text) {
     let key = 'b8127ddc3f4de9e8da7653f329851b5e'
-    fetch(`https://api.themoviedb.org/3/search/tv?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=${this.state.adult}`)
+    fetch(`https://api.themoviedb.org/3/search/tv?api_key=${key}&language=en-US&query=${text}&page=1&include_adult=false`)
     .then(result => result.json())
     .then(data => {
       this.setState({
@@ -87,6 +88,7 @@ export default class TVSearch extends React.Component {
       this.getActorsShow2(id)
       return id;
     })
+    .catch(err => Alert.alert('Oops...', 'Could not find Show 2. Did you spell the name correctly?'))
   }
 
     
@@ -173,13 +175,16 @@ export default class TVSearch extends React.Component {
   }
 
   handleSearch() {
-    this.searchDatabaseByName1(this.state.text1)
+    this.setState({
+      searching: 'Searching...'
+    }, this.searchDatabaseByName1(this.state.text1))
     // this.searchDatabaseByName2(this.state.text2)
   }
 
   render() {
     if (this.state.resultsOpen === false) {
     return (
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
       <Image 
         style={styles.image}
@@ -190,7 +195,8 @@ export default class TVSearch extends React.Component {
           justifyContent: 'center',
           alignItems: 'center',
           // marginTop: 170,
-          marginBottom: 200
+          marginBottom: '25%',
+          width: '100%'
         }}>
         <Text style={{
           fontSize: 30, 
@@ -210,7 +216,7 @@ export default class TVSearch extends React.Component {
       }}>Select your search type:</Text>
       <View style={{
         backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        width: 200,
+        width: '50%',
         justifyContent: 'center',
         borderColor: 'rgb(255, 255, 255)',
         borderWidth: 1,
@@ -244,11 +250,12 @@ export default class TVSearch extends React.Component {
         <View>
         <Button
           onPress={this.handleSearch}
-          title="Search"
+          title={this.state.searching}
           />
           </View>
         </View>
       </View>
+      </TouchableWithoutFeedback>
   );
 } else if (this.state.resultsOpen === true && this.state.prevSearchesOpen === false) {
   return (
@@ -261,18 +268,19 @@ export default class TVSearch extends React.Component {
         // padding: 25,
         // margin: 10,
         height: '80%',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         alignItems: 'center',
         flexDirection: 'column'
       }}>
           <View style={{
-          height: 200,
-          width: 350,
+          height: '35%',
+          width: '100%',
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'center',
           flexWrap: 'wrap',
-          flexDirection: 'row'
+          flexDirection: 'row',
+          paddingLeft: '5%'
         }}>
           <Image
           style={styles.showPoster}
@@ -324,7 +332,9 @@ export default class TVSearch extends React.Component {
       >
         <Button 
           onPress={() => {
-            this.setState({resultsOpen: false})
+            this.setState({
+              searching: 'Search',
+              resultsOpen: false})
           }}
           title="Go Back"
           />  
@@ -400,7 +410,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    width: '100%'
   },
   image: {
     flex: 1,
@@ -410,8 +421,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    height: 50, 
-    width: 200, 
+    height: '9%', 
+    width: '50%', 
     borderColor: 'gray', 
     borderWidth: 1,
     borderRadius: 5,
